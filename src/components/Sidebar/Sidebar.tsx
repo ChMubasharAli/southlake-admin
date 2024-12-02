@@ -1,0 +1,41 @@
+import { NavLink } from "react-router-dom";
+import logo from "../../assets/logo.png";
+
+export default function Sidebar() {
+  const menuItems = [
+    { name: "Dashboard", path: "/" },
+    { name: "After School", path: "/after-school" },
+    { name: "Programs", path: "/programs" },
+    { name: "Private", path: "/private" },
+    { name: "Music Classes", path: "/music-classes" },
+    { name: "Southlake Camps", path: "/southlake-camps" },
+    { name: "Annual Registration", path: "/annual-registration" },
+    { name: "Users", path: "/users" },
+    { name: "Payment", path: "/payment" },
+  ];
+  return (
+    <div className=" bg-white border-r-2 border-r-black min-h-screen sticky top-0 left-0 font-Montserrat">
+      <div className="flex justify-center items-center py-4 md:h-[100px]  2xl:h-[200px]">
+        <img src={logo} alt="Logo" className="w-[40%]" />
+      </div>
+      <ul className="flex flex-col md:h-[calc(100dvh-100px)] 2xl:h-[calc(100dvh-200px)]   items-center  mx-auto 2xl:max-w-[80%] space-y-4 2xl:space-y-8 py-4">
+        {menuItems.map((item) => (
+          <li key={item.name} className="w-full px-4">
+            <NavLink
+              to={item.path}
+              className={({ isActive }) =>
+                `block w-full py-2 text-center rounded-lg ${
+                  isActive
+                    ? "bg-[#1A3D16] underline underline-offset-4 text-white font-bold" // Active styles
+                    : "bg-[#1A3D16]  text-white " // Default styles
+                }`
+              }
+            >
+              {item.name}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}

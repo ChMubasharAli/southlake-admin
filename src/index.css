@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+
+/* From Uiverse.io by cssbuttons-io */ 
+.button-primary {
+    --color: #B5B7B8;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: color 0.5s;
+    z-index: 1;
+  }
+  
+  .button-primary:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    background: var(--color);
+    height: 100px;
+    width: 400px;
+    border-radius: 50%;
+  }
+  
+  .button-primary:hover {
+    color: black;
+  }
+  
+  .button-primary:before {
+    top: 100%;
+    left: 100%;
+    transition: all 0.7s;
+  }
+  
+  .button-primary:hover:before {
+    top: -30px;
+    left: -30px;
+  }
+  
+  .button-primary:active:before {
+    background: white;
+    transition: background 0s;
+  }
+
+
+  /* For Green Button */ 
+.button-green {
+  --color: #B5B7B8;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: color 0.5s;
+    z-index: 0;
+}
+
+.button-green:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 100px;
+  width: 500px;
+  border-radius: 50%;
+}
+
+.button-green:hover {
+  color: black;
+}
+
+.button-green:before {
+  top: 100%;
+  left: 100%;
+  transition: all 0.7s;
+}
+
+.button-green:hover:before {
+  top: -30px;
+  left: -30px;
+}
+
+.button-green:active:before {
+  background: #B5B7B8;
+  transition: background 0s;
+}
+
+  
