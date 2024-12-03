@@ -12,7 +12,7 @@ interface FormDataType {
   ages: string;
   location: string;
   dates: string;
-  capacity: string;
+  slotsComplete: string;
   time: string;
   discounts: string;
   classExperience: string;
@@ -28,7 +28,7 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
     ages: "",
     location: "",
     dates: "",
-    capacity: "",
+    slotsComplete: "",
     time: "",
     discounts: "",
     classExperience: "",
@@ -256,7 +256,7 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
           </div>
           <div>
             <input
-              type="text"
+              type="date"
               name="dates"
               placeholder="Dates"
               value={formData.dates}
@@ -274,18 +274,20 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
           <div>
             <input
               type="text"
-              name="capacity"
-              placeholder="Capacity"
-              value={formData.capacity}
+              name="slotsComplete"
+              placeholder="Slots Complete"
+              value={formData.slotsComplete}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
-                errors.capacity
+                errors.slotsComplete
                   ? "border-red-500"
                   : "focus:ring-2 focus:ring-[#1A3D16]"
               }`}
             />
-            {errors.capacity && (
-              <p className="text-red-500 text-sm mt-1">{errors.capacity}</p>
+            {errors.slotsComplete && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.slotsComplete}
+              </p>
             )}
           </div>
           <div>

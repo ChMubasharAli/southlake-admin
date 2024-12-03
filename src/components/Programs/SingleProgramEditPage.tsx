@@ -25,7 +25,7 @@ export default function SingleProgramEditPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const programData = location.state as Program;
-
+  const displayedProgramName = programData.programName;
   const [program, setProgram] = useState<Program>({ ...programData });
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -67,6 +67,7 @@ export default function SingleProgramEditPage() {
       image: imageUrl,
     };
     try {
+      console.log(program.id);
       await axios.put(
         `https://southlakebackend.onrender.com/api/updateSingleProgram/${program.id}`,
         updatedProgram
@@ -82,7 +83,7 @@ export default function SingleProgramEditPage() {
   return (
     <div className="p-12 flex flex-col gap-12 font-Montserrat">
       <h1 className="text-3xl font-bold text-[#1A3D16] mb-4 uppercase">
-        {program.programName}
+        {displayedProgramName}
       </h1>
       <div className="flex items-start space-x-8">
         <div className="w-[450px] h-[350px] bg-red-300 rounded-md">
@@ -106,7 +107,6 @@ export default function SingleProgramEditPage() {
             <textarea
               className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
               name="programName"
-              readOnly
               value={program.programName}
               rows={1}
               onChange={handleInputChange}

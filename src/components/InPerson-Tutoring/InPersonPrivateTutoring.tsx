@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "@mantine/core";
 
 // Define the type for a program
 interface Program {
@@ -74,7 +75,11 @@ export default function InPersonPrivateTutoring() {
       </div>
 
       {/* Show loading spinner or error message */}
-      {loading && <p>Loading programs...</p>}
+      {loading && (
+        <div className=" h-[50vh] flex items-center justify-center ">
+          <Loader color="#1A3D16" size="lg" />
+        </div>
+      )}
       {error && <p className="text-red-500">{error}</p>}
 
       {/* Render programs only when data is available */}

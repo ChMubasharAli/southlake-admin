@@ -31,6 +31,8 @@ export default function InPersonPrivateTutoringLessonEditPage() {
   const [program, setProgram] = useState<Program>({ ...programData });
   const [imageFile, setImageFile] = useState<File | null>(null);
 
+  const displayedProgramName = programData.programName;
+
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setProgram((prev) => ({
@@ -51,14 +53,14 @@ export default function InPersonPrivateTutoringLessonEditPage() {
     updatedSessionTypes[index][field] = value;
     setProgram((prev) => ({
       ...prev,
-      sessionType: updatedSessionTypes,
+      testType: updatedSessionTypes, // Correct property
     }));
   };
 
   const handleAddSessionType = () => {
     setProgram((prev) => ({
       ...prev,
-      sessionType: [...prev.testType, { name: "", price: "" }],
+      testType: [...prev.testType, { type: "", price: "" }], // Correct property
     }));
   };
 
@@ -67,7 +69,7 @@ export default function InPersonPrivateTutoringLessonEditPage() {
     updatedSessionTypes.splice(index, 1);
     setProgram((prev) => ({
       ...prev,
-      sessionType: updatedSessionTypes,
+      testType: updatedSessionTypes, // Correct property
     }));
   };
 
@@ -120,7 +122,7 @@ export default function InPersonPrivateTutoringLessonEditPage() {
   return (
     <div className="p-12 flex flex-col gap-12 font-Montserrat">
       <h1 className="text-3xl font-bold text-[#1A3D16] mb-4 uppercase">
-        {program.programName}
+        {displayedProgramName}
       </h1>
 
       <div className="flex items-start space-x-8">

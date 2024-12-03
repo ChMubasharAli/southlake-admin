@@ -5,9 +5,9 @@ export default function Sidebar() {
   const menuItems = [
     { name: "Dashboard", path: "/" },
     { name: "After School", path: "/after-school" },
-    { name: "Programs", path: "/programs" },
-    { name: "Private", path: "/private" },
-    { name: "Person Tutoring", path: "/person-private-tutoring" },
+    { name: "Single Programs", path: "/programs" },
+    { name: "Online Private", path: "/private" },
+    { name: "In Person Tutoring", path: "/person-private-tutoring" },
     { name: "Music Classes", path: "/music-classes" },
     { name: "Southlake Camps", path: "/southlake-camps" },
     { name: "Annual Registration", path: "/annual-registration" },

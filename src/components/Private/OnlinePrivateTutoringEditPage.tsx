@@ -27,6 +27,8 @@ export default function OnlinePrivateTutoringEditPage() {
   const navigate = useNavigate();
   const programData = location.state as Program;
 
+  const displayedProgramName = programData.programName;
+
   const [isLoading, setLoading] = useState<boolean>(false);
   const [program, setProgram] = useState<Program>({ ...programData });
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -119,7 +121,7 @@ export default function OnlinePrivateTutoringEditPage() {
   return (
     <div className="p-12 flex flex-col gap-12 font-Montserrat">
       <h1 className="text-3xl font-bold text-[#1A3D16] mb-4 uppercase">
-        {program.programName}
+        {displayedProgramName}
       </h1>
 
       <div className="flex items-start space-x-8">

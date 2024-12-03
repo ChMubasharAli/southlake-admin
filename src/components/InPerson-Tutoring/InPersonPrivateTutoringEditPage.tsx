@@ -22,10 +22,12 @@ interface Program {
   updatedAt?: Date;
 }
 
-export default function InPersonPrivateTutoringEditPage() {
+export default function OnlinePrivateTutoringEditPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const programData = location.state as Program;
+
+  const displayedProgramName = programData.programName;
 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [program, setProgram] = useState<Program>({ ...programData });
@@ -58,7 +60,7 @@ export default function InPersonPrivateTutoringEditPage() {
   const handleAddSessionType = () => {
     setProgram((prev) => ({
       ...prev,
-      sessionType: [...prev.numberOfHours, { name: "", price: "" }],
+      numberOfHours: [...prev.numberOfHours, { hours: "", price: "" }],
     }));
   };
 
@@ -67,7 +69,7 @@ export default function InPersonPrivateTutoringEditPage() {
     updatedSessionTypes.splice(index, 1);
     setProgram((prev) => ({
       ...prev,
-      sessionType: updatedSessionTypes,
+      numberOfHours: updatedSessionTypes, // Correct update
     }));
   };
 
@@ -99,7 +101,6 @@ export default function InPersonPrivateTutoringEditPage() {
       ...program,
       image: imageUrl,
     };
-
     try {
       setLoading(true);
       await axios.put(
@@ -120,7 +121,7 @@ export default function InPersonPrivateTutoringEditPage() {
   return (
     <div className="p-12 flex flex-col gap-12 font-Montserrat">
       <h1 className="text-3xl font-bold text-[#1A3D16] mb-4 uppercase">
-        {program.programName}
+        {displayedProgramName}
       </h1>
 
       <div className="flex items-start space-x-8">
@@ -234,11 +235,9 @@ export default function InPersonPrivateTutoringEditPage() {
 
       {/* Session Type Section */}
       <div className="mt-6">
-        <h3 className="text-lg font-bold text-[#1A3D16] mb-2">
-          Number of Hours
-        </h3>
+        <h3 className="text-lg font-bold text-[#1A3D16] mb-2">Session Types</h3>
         <div className="space-y-4">
-          {program.numberOfHours?.map((session, index) => (
+          {program.numberOfHours.map((session, index) => (
             <div key={index} className="flex items-center space-x-4">
               <input
                 type="text"
@@ -270,7 +269,7 @@ export default function InPersonPrivateTutoringEditPage() {
             className="px-4 py-2 text-white bg-blue-500 rounded-md"
             onClick={handleAddSessionType}
           >
-            Add More
+            Add Product
           </button>
         </div>
       </div>

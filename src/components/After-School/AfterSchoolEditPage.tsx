@@ -26,6 +26,8 @@ export default function SingleProgramEditPage() {
   const navigate = useNavigate();
   const programData = location.state as Program;
 
+  const displayedProgramName = programData.programName;
+
   const [program, setProgram] = useState<Program>({ ...programData });
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -68,7 +70,7 @@ export default function SingleProgramEditPage() {
     };
     try {
       await axios.put(
-        `https://southlakebackend.onrender.com/api/updateAfterSchoolProgram/${program.programName}`,
+        `https://southlakebackend.onrender.com/api/updateAfterSchoolProgram/${program.id}`,
         updatedProgram
       );
       toast.success("Program updated successfully!");
@@ -79,10 +81,12 @@ export default function SingleProgramEditPage() {
     }
   };
 
+  // const programName = program.programName;
+
   return (
     <div className="p-12 flex flex-col gap-12 font-Montserrat">
       <h1 className="text-3xl font-bold text-[#1A3D16] mb-4 uppercase">
-        {program.programName}
+        {displayedProgramName}
       </h1>
       <div className="flex items-start space-x-8">
         <div className="w-[450px] h-[350px] bg-red-300 rounded-md">

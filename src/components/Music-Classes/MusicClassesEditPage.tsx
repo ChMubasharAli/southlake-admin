@@ -31,6 +31,7 @@ export default function MusicClassesEditPage() {
   const [program, setProgram] = useState<Program>({ ...programData });
   const [imageFile, setImageFile] = useState<File | null>(null);
 
+  const displayedProgramName = programData.programName;
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setProgram((prev) => ({
@@ -47,27 +48,27 @@ export default function MusicClassesEditPage() {
     field: "name" | "price",
     value: string
   ) => {
-    const updatedSessionTypes = [...program.lessonLength];
-    updatedSessionTypes[index][field] = value;
+    const updatedLessonLength = [...program.lessonLength]; // Make a copy of lessonLength
+    updatedLessonLength[index][field] = value; // Update the specific field
     setProgram((prev) => ({
       ...prev,
-      sessionType: updatedSessionTypes,
+      lessonLength: updatedLessonLength, // Correct the property name here
     }));
   };
 
   const handleAddSessionType = () => {
     setProgram((prev) => ({
       ...prev,
-      sessionType: [...prev.lessonLength, { name: "", price: "" }],
+      lessonLength: [...prev.lessonLength, { name: "", price: "" }], // Add new session
     }));
   };
 
   const handleRemoveSessionType = (index: number) => {
-    const updatedSessionTypes = [...program.lessonLength];
-    updatedSessionTypes.splice(index, 1);
+    const updatedLessonLength = [...program.lessonLength]; // Make a copy of lessonLength
+    updatedLessonLength.splice(index, 1); // Remove the session at the given index
     setProgram((prev) => ({
       ...prev,
-      sessionType: updatedSessionTypes,
+      lessonLength: updatedLessonLength, // Correct the property name here
     }));
   };
 
@@ -119,7 +120,7 @@ export default function MusicClassesEditPage() {
   return (
     <div className="p-12 flex flex-col gap-12 font-Montserrat">
       <h1 className="text-3xl font-bold text-[#1A3D16] mb-4 uppercase">
-        {program.programName}
+        {displayedProgramName}
       </h1>
 
       <div className="flex items-start space-x-8">
