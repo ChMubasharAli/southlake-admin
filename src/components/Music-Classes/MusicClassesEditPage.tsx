@@ -16,13 +16,13 @@ interface Program {
   cancellationPolicy: string;
   image: string;
   slotsAvailable: string;
-  price: number;
-  sessionType: { name: string; price: string }[]; // Updated structure
+  amount: number;
+  lessonLength: { name: string; price: string }[]; // Updated structure
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export default function OnlinePrivateTutoringEditPage() {
+export default function MusicClassesEditPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const programData = location.state as Program;
@@ -47,7 +47,7 @@ export default function OnlinePrivateTutoringEditPage() {
     field: "name" | "price",
     value: string
   ) => {
-    const updatedSessionTypes = [...program.sessionType];
+    const updatedSessionTypes = [...program.lessonLength];
     updatedSessionTypes[index][field] = value;
     setProgram((prev) => ({
       ...prev,
@@ -58,12 +58,12 @@ export default function OnlinePrivateTutoringEditPage() {
   const handleAddSessionType = () => {
     setProgram((prev) => ({
       ...prev,
-      sessionType: [...prev.sessionType, { name: "", price: "" }],
+      sessionType: [...prev.lessonLength, { name: "", price: "" }],
     }));
   };
 
   const handleRemoveSessionType = (index: number) => {
-    const updatedSessionTypes = [...program.sessionType];
+    const updatedSessionTypes = [...program.lessonLength];
     updatedSessionTypes.splice(index, 1);
     setProgram((prev) => ({
       ...prev,
@@ -102,7 +102,7 @@ export default function OnlinePrivateTutoringEditPage() {
     try {
       setLoading(true);
       await axios.put(
-        `https://southlakebackend.onrender.com/api//updateOnlinePrivateTutoring/${program.id}`,
+        `https://southlakebackend.onrender.com/api/updateMusicProgram/${program.id}`,
         updatedProgram
       );
       toast.success("Program updated successfully!");
@@ -153,8 +153,8 @@ export default function OnlinePrivateTutoringEditPage() {
             <label className="font-semibold text-[#1A3D16]">Price</label>
             <textarea
               className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-              name="price"
-              value={program.price.toString()}
+              name="amount"
+              value={program.amount.toString()}
               rows={1}
               onChange={handleInputChange}
             />
@@ -177,14 +177,7 @@ export default function OnlinePrivateTutoringEditPage() {
       <div className="mt-6">
         <h3 className="text-lg font-bold text-[#1A3D16] mb-2">Details</h3>
         <div className="grid grid-cols-2 gap-6 text-sm">
-          {[
-            { label: "Ages", name: "ages" },
-            { label: "Location", name: "location" },
-            { label: "Dates", name: "dates" },
-            { label: "Capacity", name: "capacity" },
-            { label: "Time", name: "time" },
-            { label: "Discounts", name: "discounts" },
-          ].map((field) => (
+          {[{ label: "Instrument", name: "instrument" }].map((field) => (
             <div key={field.name}>
               <label className="font-semibold text-[#1A3D16]">
                 {field.label}
@@ -201,41 +194,11 @@ export default function OnlinePrivateTutoringEditPage() {
         </div>
       </div>
 
-      <div className="mt-8">
-        <h3 className="text-lg font-bold text-[#1A3D16] mb-4">Description</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="font-semibold text-[#1A3D16]">
-              Class Experience
-            </label>
-            <textarea
-              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-              name="classExperience"
-              value={program.classExperience}
-              rows={3}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div>
-            <label className="font-semibold text-[#1A3D16]">
-              Cancellation Policy
-            </label>
-            <textarea
-              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-              name="cancellationPolicy"
-              value={program.cancellationPolicy}
-              rows={3}
-              onChange={handleInputChange}
-            />
-          </div>
-        </div>
-      </div>
-
       {/* Session Type Section */}
       <div className="mt-6">
         <h3 className="text-lg font-bold text-[#1A3D16] mb-2">Session Types</h3>
         <div className="space-y-4">
-          {program.sessionType.map((session, index) => (
+          {program.lessonLength.map((session, index) => (
             <div key={index} className="flex items-center space-x-4">
               <input
                 type="text"

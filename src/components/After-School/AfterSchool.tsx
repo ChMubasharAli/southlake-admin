@@ -22,7 +22,7 @@ export default function AfterSchool() {
     const fetchPrograms = async () => {
       try {
         const response = await axios.get<Program[]>(
-          "http://localhost:10000/api/getAllAfterSchoolPrograms"
+          "https://southlakebackend.onrender.com/api/getAllAfterSchoolPrograms"
         );
         setPrograms(response.data); // Update state with fetched data
         setLoading(false);

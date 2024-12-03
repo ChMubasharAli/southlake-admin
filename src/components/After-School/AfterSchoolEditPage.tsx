@@ -68,7 +68,7 @@ export default function SingleProgramEditPage() {
     };
     try {
       await axios.put(
-        `http://localhost:10000/api/updateAfterSchoolProgram/${program.programName}`,
+        `https://southlakebackend.onrender.com/api/updateAfterSchoolProgram/${program.programName}`,
         updatedProgram
       );
       toast.success("Program updated successfully!");

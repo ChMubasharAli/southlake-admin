@@ -22,7 +22,7 @@ export default function OnlinePrivateTutoring() {
     const fetchPrograms = async () => {
       try {
         const response = await axios.get<Program[]>(
-          "http://localhost:10000/api/getAllOnlinePrivateTutoring"
+          "https://southlakebackend.onrender.com/api/getAllOnlinePrivateTutoring"
         );
         setPrograms(response.data); // Update state with fetched data
         setLoading(false);

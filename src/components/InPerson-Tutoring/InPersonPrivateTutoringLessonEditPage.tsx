@@ -17,12 +17,12 @@ interface Program {
   image: string;
   slotsAvailable: string;
   price: number;
-  sessionType: { name: string; price: string }[]; // Updated structure
+  testType: { type: string; price: string }[]; // Updated structure
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export default function OnlinePrivateTutoringEditPage() {
+export default function InPersonPrivateTutoringLessonEditPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const programData = location.state as Program;
@@ -44,10 +44,10 @@ export default function OnlinePrivateTutoringEditPage() {
 
   const handleSessionTypeChange = (
     index: number,
-    field: "name" | "price",
+    field: "type" | "price",
     value: string
   ) => {
-    const updatedSessionTypes = [...program.sessionType];
+    const updatedSessionTypes = [...program.testType];
     updatedSessionTypes[index][field] = value;
     setProgram((prev) => ({
       ...prev,
@@ -58,12 +58,12 @@ export default function OnlinePrivateTutoringEditPage() {
   const handleAddSessionType = () => {
     setProgram((prev) => ({
       ...prev,
-      sessionType: [...prev.sessionType, { name: "", price: "" }],
+      sessionType: [...prev.testType, { name: "", price: "" }],
     }));
   };
 
   const handleRemoveSessionType = (index: number) => {
-    const updatedSessionTypes = [...program.sessionType];
+    const updatedSessionTypes = [...program.testType];
     updatedSessionTypes.splice(index, 1);
     setProgram((prev) => ({
       ...prev,
@@ -99,10 +99,11 @@ export default function OnlinePrivateTutoringEditPage() {
       ...program,
       image: imageUrl,
     };
+
     try {
       setLoading(true);
       await axios.put(
-        `https://southlakebackend.onrender.com/api//updateOnlinePrivateTutoring/${program.id}`,
+        `https://southlakebackend.onrender.com/api/updatePrivateAndTestPrep/${program.id}`,
         updatedProgram
       );
       toast.success("Program updated successfully!");
@@ -233,17 +234,19 @@ export default function OnlinePrivateTutoringEditPage() {
 
       {/* Session Type Section */}
       <div className="mt-6">
-        <h3 className="text-lg font-bold text-[#1A3D16] mb-2">Session Types</h3>
+        <h3 className="text-lg font-bold text-[#1A3D16] mb-2">
+          Number of Hours
+        </h3>
         <div className="space-y-4">
-          {program.sessionType.map((session, index) => (
+          {program.testType?.map((session, index) => (
             <div key={index} className="flex items-center space-x-4">
               <input
                 type="text"
                 placeholder="Session Name"
                 className="w-1/2 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-                value={session.name}
+                value={session.type}
                 onChange={(e) =>
-                  handleSessionTypeChange(index, "name", e.target.value)
+                  handleSessionTypeChange(index, "type", e.target.value)
                 }
               />
               <input
@@ -267,7 +270,7 @@ export default function OnlinePrivateTutoringEditPage() {
             className="px-4 py-2 text-white bg-blue-500 rounded-md"
             onClick={handleAddSessionType}
           >
-            Add Product
+            Add More
           </button>
         </div>
       </div>

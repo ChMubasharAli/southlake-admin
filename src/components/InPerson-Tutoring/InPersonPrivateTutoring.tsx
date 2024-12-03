@@ -7,10 +7,15 @@ import { useNavigate } from "react-router-dom";
 interface Program {
   id: number;
   programName: string;
-  amount: number;
+  price: number;
 }
 
-export default function AfterSchool() {
+interface ProgramResponse {
+  0: Program[]; // First element is an array of Programs
+  1: Program; // Second element is a single Program object
+}
+
+export default function InPersonPrivateTutoring() {
   const navigate = useNavigate();
   const [programs, setPrograms] = useState<Program[]>([]); // State to store programs data
 
@@ -21,14 +26,22 @@ export default function AfterSchool() {
   useEffect(() => {
     const fetchPrograms = async () => {
       try {
-        const response = await axios.get<Program[]>(
-          "https://southlakebackend.onrender.com/api/getAllMusicPrograms"
+        // Fetching the data using the correct type (ProgramResponse)
+        const response = await axios.get<ProgramResponse>(
+          "https://southlakebackend.onrender.com/api/getAllPrivateAndTestPrep"
         );
-        setPrograms(response.data); // Update state with fetched data
+
+        // Combine both parts of the response
+        const combinedData = [
+          ...response.data[0], // First array of programs
+          response.data[1], // Second single program object (wrap in an array)
+        ];
+
+        setPrograms(combinedData); // Update state with the combined data
         setLoading(false);
       } catch (err: unknown) {
         if (axios.isAxiosError(err)) {
-          setError(err.response?.data?.message || "Failed to fetch programs");
+          setError("Failed to fetch programs");
         } else {
           setError("An unexpected error occurred");
         }
@@ -48,9 +61,8 @@ export default function AfterSchool() {
     <div className="p-12 font-Montserrat">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-[#1A3D16] uppercase ">
-          Music Classes
+          Inperson Private Tutoring
         </h2>
-        -
         <div className="flex gap-8 items-center">
           <button
             onClick={gotoEnrolledStudentPage}
@@ -83,12 +95,20 @@ export default function AfterSchool() {
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-xl font-bold text-[#1A3D16]">
-                  ${program.amount}
+                  ${program.price}
                 </span>
                 <button
-                  onClick={() =>
-                    navigate("/music-classes-edit-page", { state: program })
-                  }
+                  onClick={() => {
+                    if (program.id === 6) {
+                      navigate("/person-private-tutoring-lesson-edit-page", {
+                        state: program,
+                      });
+                    } else {
+                      navigate("/person-private-tutoring-edit-page", {
+                        state: program,
+                      });
+                    }
+                  }}
                   className="flex items-center px-3 py-2 bg-[#1A3D16] text-white rounded hover:bg-[#1A3D16]/90"
                 >
                   <FaEdit className="mr-2" size={16} />

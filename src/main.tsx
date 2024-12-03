@@ -18,11 +18,14 @@ import {
   AnnualRegistration,
   Dashboard,
   EnrolledStudents,
+  InPersonPrivateTutoring,
+  InPersonPrivateTutoringEditPage,
+  InPersonPrivateTutoringLessonEditPage,
   MusicClasses,
+  MusicClassesEditPage,
   OnlinePrivateTutoring,
   OnlinePrivateTutoringEditPage,
   Payment,
-  PrivateLessonEditPage,
   Programs,
   SingleProgramEditPage,
   SingleProgramEnrolledStudents,
@@ -74,12 +77,24 @@ const router = createBrowserRouter([
         element: <OnlinePrivateTutoringEditPage />,
       },
       {
+        path: "/person-private-tutoring",
+        element: <InPersonPrivateTutoring />,
+      },
+      {
+        path: "/person-private-tutoring-edit-page",
+        element: <InPersonPrivateTutoringEditPage />,
+      },
+      {
+        path: "/person-private-tutoring-lesson-edit-page",
+        element: <InPersonPrivateTutoringLessonEditPage />,
+      },
+      {
         path: "/music-classes",
         element: <MusicClasses />,
       },
       {
-        path: "/private-lessons-edit-page",
-        element: <PrivateLessonEditPage />,
+        path: "/music-classes-edit-page",
+        element: <MusicClassesEditPage />,
       },
       {
         path: "/southlake-camps",

@@ -7,6 +7,7 @@ export default function Sidebar() {
     { name: "After School", path: "/after-school" },
     { name: "Programs", path: "/programs" },
     { name: "Private", path: "/private" },
+    { name: "Person Tutoring", path: "/person-private-tutoring" },
     { name: "Music Classes", path: "/music-classes" },
     { name: "Southlake Camps", path: "/southlake-camps" },
     { name: "Annual Registration", path: "/annual-registration" },

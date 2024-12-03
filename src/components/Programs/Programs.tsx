@@ -23,7 +23,7 @@ export default function Programs() {
     const fetchPrograms = async () => {
       try {
         const response = await axios.get<Program[]>(
-          "http://localhost:10000/api/getAllSinglePrograms"
+          "https://southlakebackend.onrender.com/api/getAllSinglePrograms"
         );
         setPrograms(response.data); // Update state with fetched data
         setLoading(false);
