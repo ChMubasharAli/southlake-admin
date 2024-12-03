@@ -19,7 +19,7 @@ export default function Sidebar() {
       <div className="flex justify-center items-center py-4 md:h-[100px]  2xl:h-[200px]">
         <img src={logo} alt="Logo" className="w-[40%]" />
       </div>
-      <ul className="flex flex-col md:h-[calc(100dvh-100px)] 2xl:h-[calc(100dvh-200px)]   items-center  mx-auto 2xl:max-w-[80%] space-y-4 2xl:space-y-8 py-4">
+      <ul className="flex flex-col md:min-h-[calc(100dvh-100px)] 2xl:min-h-[calc(100dvh-200px)]   items-center  mx-auto 2xl:max-w-[80%] space-y-4 2xl:space-y-8 py-4">
         {menuItems.map((item) => (
           <li key={item.name} className="w-full px-4">
             <NavLink
