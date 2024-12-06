@@ -1,137 +1,105 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { jsPDF } from "jspdf";
-import { Loader } from "@mantine/core";
 import { FaDownload } from "react-icons/fa";
 
-interface AfterSchoolProgramForm {
-  registrationId: number;
-  expiryDate: string;
+interface ProgramData {
+  [key: string]: any;
+}
+
+interface StudentData {
   parentFirstName: string;
   parentLastName: string;
-  AfterSchoolProgramForms: Array<Record<string, any>>; // Nested array for additional data
+  registrationId: number;
+  amount: string;
+  AfterSchoolProgramForms: ProgramData[];
+  MusciProgramForms: ProgramData[];
+  OnlineTutoringForms: ProgramData[];
+  PrivateAndTestPrepForms: ProgramData[];
+  SingleProgramForms: ProgramData[];
+  CampForms: ProgramData[];
 }
 
 const EnrolledStudents: React.FC = () => {
+  const [data, setData] = useState<StudentData[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [data, setData] = useState<AfterSchoolProgramForm[]>([]);
-  const [filteredData, setFilteredData] = useState<AfterSchoolProgramForm[]>(
-    []
-  );
 
-  // Fetch Data
   const fetchData = useCallback(async () => {
     try {
       const response = await axios.get(
-        "https://southlakebackend.onrender.com/api/getAfterSchoolParent"
+        "https://southlakebackend.onrender.com/api/allUserPaymentHitory"
       );
-      if (response.data) {
-        setData(response.data);
-        setFilteredData(response.data);
-      } else {
-        console.error("No data found in the response.");
-      }
+      setData(response.data || []);
     } catch (error) {
-      console.error("Error fetching data: ", error);
+      console.error("Error fetching data:", error);
     }
   }, []);
 
-  // Initial Data Load
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  // Filter Logic
-  useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setFilteredData(data);
-    } else {
-      const lowercasedQuery = searchQuery.toLowerCase();
-      setFilteredData(
-        data.filter(
-          (form) =>
-            form.registrationId.toString().includes(lowercasedQuery) ||
-            form.parentFirstName.toLowerCase().includes(lowercasedQuery) ||
-            form.parentLastName.toLowerCase().includes(lowercasedQuery)
-        )
-      );
-    }
-  }, [searchQuery, data]);
-
-  // PDF Generation
-  const handleDownload = (registrationId: number) => {
-    const formData = data.find(
-      (form) => form.registrationId === registrationId
-    );
-
-    if (!formData) {
-      console.error("No data found for this registration ID.");
-      return;
-    }
+  const handleDownload = (
+    registrationId: number,
+    programName: string,
+    programData: ProgramData[]
+  ) => {
+    if (programData?.length === 0) return;
 
     const doc = new jsPDF();
     doc.setFontSize(18);
-    doc.text("After School Program Details", 10, 10);
+    doc.text(`${programName} Details`, 10, 10);
     doc.setFontSize(12);
 
-    let yOffset = 20; // Starting vertical position
+    doc.text(`Registration ID: ${registrationId}`, 10, 20);
 
-    const addContent = (key: string, value: any) => {
-      const formattedKey = key.replace(/([A-Z])/g, " $1"); // Split camelCase keys
-      const formattedValue = value || "N/A";
-      const lineHeight = 10;
-
-      if (yOffset + lineHeight > 280) {
-        // Check if content exceeds page height
-        doc.addPage();
-        yOffset = 10; // Reset vertical position for new page
-      }
-
-      doc.text(`${formattedKey}: ${formattedValue}`, 10, yOffset);
-      yOffset += lineHeight;
-    };
-
-    for (const [key, value] of Object.entries(formData)) {
-      if (key === "AfterSchoolProgramForms") {
-        if (value.length > 0) {
-          doc.text("After School Program Forms Data:", 10, yOffset);
-          yOffset += 10;
-
-          value.forEach((item: Record<string, any>, index: number) => {
-            doc.text(`Form ${index + 1}:`, 10, yOffset);
-            yOffset += 10;
-
-            for (const [itemKey, itemValue] of Object.entries(item)) {
-              addContent(itemKey, itemValue);
-            }
-          });
-        } else {
-          addContent(key, "No forms available");
+    let yOffset = 30;
+    programData.forEach((item, index) => {
+      doc.text(`Entry ${index + 1}:`, 10, yOffset);
+      yOffset += 10;
+      Object.entries(item).forEach(([key, value]) => {
+        doc.text(`${key}: ${value}`, 10, yOffset);
+        yOffset += 10;
+        if (yOffset > 270) {
+          doc.addPage();
+          yOffset = 10;
         }
-      } else {
-        addContent(key, value);
-      }
-    }
+      });
+    });
 
-    doc.save(`Registration_${formData.registrationId}.pdf`);
+    doc.save(`${programName}_Registration_${registrationId}.pdf`);
   };
 
+  // Filter data based on the search query
+  const filteredData = data.filter(
+    (student) =>
+      student.parentFirstName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      student.parentLastName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      student.registrationId.toString().includes(searchQuery)
+  );
+
   return (
-    <div className="p-6 lg:max-w-[80%] mx-auto ">
+    <div className="p-6 max-w-full mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#1A3D16] ">
-          After School Program and Enrichment <br />
-          Enrolled Students
-        </h2>
+        <h2 className="text-2xl font-bold text-[#1A3D16] ">Pyments Details</h2>
       </div>
-      <div className="  bg-white p-8 rounded-lg shadow-lg">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by Registration ID or Name"
-          className="w-full p-3 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      <div className="max-w-full mx-auto bg-white ">
+        {/* Search Input */}
+        <div className="rounded-lg shadow-lg">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by Parent Name or Registration ID"
+            className="w-full p-3 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Table for Displaying Enrolled Students */}
         <table className="min-w-full bg-white border border-gray-300 shadow-lg">
           <thead>
             <tr className="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
@@ -139,52 +107,142 @@ const EnrolledStudents: React.FC = () => {
                 Registration ID
               </th>
               <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
-                Parent First Name
+                Parent Name
               </th>
               <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
-                Parent Last Name
+                Amount
               </th>
               <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
-                Program BOUGHT
+                After School Program
               </th>
               <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
-                Actions
+                Music Program
+              </th>
+              <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
+                Online Tutoring
+              </th>
+              <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
+                Private & Test Prep
+              </th>
+              <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
+                Single Program
+              </th>
+              <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
+                Camp Forms
               </th>
             </tr>
           </thead>
-          <tbody className="text-gray-600 text-sm font-light">
-            {filteredData.length > 0 ? (
-              filteredData.map((form) => (
-                <tr
-                  key={form.registrationId}
-                  className="border-b border-gray-300 hover:bg-gray-100"
-                >
-                  <td className="py-3 px-6 text-left">{form.registrationId}</td>
-                  <td className="py-3 px-6 text-left">
-                    {form.parentFirstName}
-                  </td>
-                  <td className="py-3 px-6 text-left">{form.parentLastName}</td>
-                  <td className="py-3 px-6 text-left">
-                    {form.AfterSchoolProgramForms.length}
-                  </td>
-
-                  <td className="py-3 px-6 text-center flex">
+          <tbody>
+            {filteredData.map((student) => (
+              <tr
+                key={student.registrationId}
+                className="border-b border-gray-300 hover:bg-gray-100"
+              >
+                <td className="py-3 px-6 text-left">
+                  {student.registrationId}
+                </td>
+                <td className="py-3 px-6 text-left">
+                  {student.parentFirstName} {student.parentLastName}
+                </td>
+                <td className="py-3 px-6 text-left ">${student.amount}</td>
+                <td className="py-3 px-6 text-center ">
+                  {(student.AfterSchoolProgramForms?.length || 0) > 0 && (
                     <FaDownload
-                      onClick={() => handleDownload(form.registrationId)}
-                      className="cursor-pointer text-[#1A3D16] hover:text-[#1A3D16]/90"
+                      onClick={() =>
+                        handleDownload(
+                          student.registrationId,
+                          "After School Program",
+                          student.AfterSchoolProgramForms || []
+                        )
+                      }
                       size={16}
                       title="Download PDF"
+                      className="cursor-pointer text-[#1A3D16] hover:text-[#1A3D16]/90"
                     />
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="text-center py-4 text-gray-600">
-                  <Loader color="#1A3D16" size="lg" />
+                  )}
+                </td>
+                <td className="py-3 px-6 text-center ">
+                  {(student.MusciProgramForms?.length || 0) > 0 && (
+                    <FaDownload
+                      onClick={() =>
+                        handleDownload(
+                          student.registrationId,
+                          "Music Program",
+                          student.MusciProgramForms || []
+                        )
+                      }
+                      size={16}
+                      title="Download PDF"
+                      className="cursor-pointer text-[#1A3D16] hover:text-[#1A3D16]/90"
+                    />
+                  )}
+                </td>
+                <td className="py-3 px-6 text-center ">
+                  {(student.OnlineTutoringForms?.length || 0) > 0 && (
+                    <FaDownload
+                      onClick={() =>
+                        handleDownload(
+                          student.registrationId,
+                          "Online Tutoring",
+                          student.OnlineTutoringForms || []
+                        )
+                      }
+                      size={16}
+                      title="Download PDF"
+                      className="cursor-pointer text-[#1A3D16] hover:text-[#1A3D16]/90"
+                    />
+                  )}
+                </td>
+                <td className="py-3 px-6 text-center ">
+                  {(student.PrivateAndTestPrepForms?.length || 0) > 0 && (
+                    <FaDownload
+                      onClick={() =>
+                        handleDownload(
+                          student.registrationId,
+                          "Private & Test Prep",
+                          student.PrivateAndTestPrepForms || []
+                        )
+                      }
+                      size={16}
+                      title="Download PDF"
+                      className="cursor-pointer text-[#1A3D16] hover:text-[#1A3D16]/90"
+                    />
+                  )}
+                </td>
+                <td className="py-3 px-6 text-center ">
+                  {(student.SingleProgramForms?.length || 0) > 0 && (
+                    <FaDownload
+                      onClick={() =>
+                        handleDownload(
+                          student.registrationId,
+                          "Single Program",
+                          student.SingleProgramForms || []
+                        )
+                      }
+                      size={16}
+                      title="Download PDF"
+                      className="cursor-pointer text-[#1A3D16] hover:text-[#1A3D16]/90"
+                    />
+                  )}
+                </td>
+                <td className="py-3 px-6 text-center ">
+                  {(student.CampForms?.length || 0) > 0 && (
+                    <FaDownload
+                      onClick={() =>
+                        handleDownload(
+                          student.registrationId,
+                          "Camp Forms",
+                          student.CampForms || []
+                        )
+                      }
+                      size={16}
+                      title="Download PDF"
+                      className="cursor-pointer text-[#1A3D16] hover:text-[#1A3D16]/90"
+                    />
+                  )}
                 </td>
               </tr>
-            )}
+            ))}
           </tbody>
         </table>
       </div>
