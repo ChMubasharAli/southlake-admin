@@ -1,78 +1,94 @@
+import { useEffect, useState } from "react";
 import { FaDownload } from "react-icons/fa";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import axios from "axios";
+
+interface Student {
+  id: number;
+  parentFirstName: string;
+  parentLastName: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  zipCode: number;
+  country: string;
+  city: string;
+  state: string;
+  phone: string;
+  email: string;
+  amount: string;
+  registrationId: number;
+  createdAt: string;
+  updatedAt: string;
+  expiryDate: string;
+}
 
 export default function EnrolledStudents() {
-  const data = [
-    {
-      customerId: 1,
-      parentName: "John Doe",
-      childName: "Alice Doe",
-      payment: "$500",
-      download: FaDownload,
-    },
-    {
-      customerId: 2,
-      parentName: "Jane Smith",
-      childName: "Bob Smith",
-      payment: "$300",
-      download: FaDownload,
-    },
-    {
-      customerId: 3,
-      parentName: "Michael Johnson",
-      childName: "Chris Johnson",
-      payment: "$450",
-      download: FaDownload,
-    },
-    {
-      customerId: 4,
-      parentName: "Emily White",
-      childName: "Danny White",
-      payment: "$550",
-      download: FaDownload,
-    },
-    {
-      customerId: 5,
-      parentName: "James Brown",
-      childName: "Eva Brown",
-      payment: "$400",
-      download: FaDownload,
-    },
-    {
-      customerId: 6,
-      parentName: "Sarah Miller",
-      childName: "Frank Miller",
-      payment: "$350",
-      download: FaDownload,
-    },
-    {
-      customerId: 7,
-      parentName: "David Wilson",
-      childName: "Grace Wilson",
-      payment: "$600",
-      download: FaDownload,
-    },
-    {
-      customerId: 8,
-      parentName: "Jessica Moore",
-      childName: "Hannah Moore",
-      payment: "$320",
-      download: FaDownload,
-    },
-    {
-      customerId: 9,
-      parentName: "Thomas Taylor",
-      childName: "Ian Taylor",
-      payment: "$490",
-      download: FaDownload,
-    },
-    {
-      customerId: 10,
-      parentName: "Laura Anderson",
-      childName: "Jack Anderson",
-      payment: "$530",
-      download: FaDownload,
-    },
-  ];
+  const [students, setStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Fetch students data from API
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get<Student[]>(
+          "https://southlakebackend.onrender.com/api/getAllRegistrations"
+        );
+        setStudents(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching students:", error);
+        setLoading(false);
+      }
+    };
+    fetchStudents();
+  }, []);
+
+  // Handle PDF generation and download
+  const handleDownload = (student: Student) => {
+    const doc = new jsPDF();
+
+    // Add title
+    doc.setFontSize(18);
+    doc.text("Enrolled Student Details", 14, 20);
+
+    // Add student details
+    const userDetails = [
+      ["Parent Name", `${student.parentFirstName} ${student.parentLastName}`],
+      ["Child Name", `${student.firstName} ${student.lastName}`],
+      ["Address", student.address],
+      ["City", student.city],
+      ["State", student.state],
+      ["Country", student.country],
+      ["Zip Code", student.zipCode.toString()],
+      ["Phone", student.phone],
+      ["Email", student.email],
+      ["Payment Amount", `$${student.amount}`],
+      ["Registration ID", student.registrationId.toString()],
+      ["Expiry Date", new Date(student.expiryDate).toLocaleDateString()],
+    ];
+
+    userDetails.forEach(([key, value], index) => {
+      doc.setFontSize(12);
+      doc.text(`${key}: ${value}`, 14, 30 + index * 10);
+    });
+
+    // Add footer
+    doc.setFontSize(10);
+    doc.text(
+      "Generated on: " + new Date().toLocaleString(),
+      14,
+      doc.internal.pageSize.height - 10
+    );
+
+    // Save PDF
+    doc.save(`${student.firstName}_${student.lastName}_Details.pdf`);
+  };
+
+  if (loading) {
+    return <div className="p-12 text-center">Loading...</div>;
+  }
 
   return (
     <div className="p-12 font-Montserrat">
@@ -81,17 +97,14 @@ export default function EnrolledStudents() {
           After School Program and Enrichment <br />
           Enrolled Students
         </h2>
-        <button className=" px-4 py-2 text-white rounded-md w-fit button-green font-Montserrat bg-[#1A3D16] border-2 border-[#1A3D16] hover:border-[#1A3D16] hover:!text-black  font-semibold     transition-all duration-300">
-          Enrolled Students
-        </button>
       </div>
-      <div className="p-4 ">
+      <div className="p-4">
         <div className="overflow-x-auto shadow-lg">
-          <table className="min-w-full bg-white border border-gray-300  shadow-lg ">
+          <table className="min-w-full bg-white border border-gray-300 shadow-lg">
             <thead>
               <tr className="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
                 <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
-                  Customer ID
+                  Registration ID
                 </th>
                 <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
                   Parent Name
@@ -100,30 +113,37 @@ export default function EnrolledStudents() {
                   Child Name
                 </th>
                 <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
-                  payment
+                  Payment
                 </th>
                 <th className="py-3 px-6 text-center text-[#1A3D16] uppercase">
-                  form
+                  Download
                 </th>
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
-              {data.map((item, index) => (
+              {students.map((student) => (
                 <tr
-                  key={index}
+                  key={student.id}
                   className="border-b border-gray-300 hover:bg-gray-100"
                 >
-                  <td className="py-3 px-6 text-left">{item.customerId}</td>
-                  <td className="py-3 px-6 text-left">{item.parentName}</td>
-                  <td className="py-3 px-6 text-left">{item.childName}</td>
-                  <td className="py-3 px-6 text-left whitespace-nowrap">
-                    {item.payment}
+                  <td className="py-3 px-6 text-left">
+                    {student.registrationId}
                   </td>
-                  <td className="py-3 px-6 text-center flex items-center justify-center">
-                    <item.download
-                      className="text-center cursor-pointer text-[#1A3D16] hover:text-[#1A3D16]/90 "
+                  <td className="py-3 px-6 text-left">
+                    {student.parentFirstName} {student.parentLastName}
+                  </td>
+                  <td className="py-3 px-6 text-left">
+                    {student.firstName} {student.lastName}
+                  </td>
+                  <td className="py-3 px-6 text-left whitespace-nowrap">
+                    ${student.amount}
+                  </td>
+                  <td className="py-3 px-6 text-center">
+                    <FaDownload
+                      className="cursor-pointer text-[#1A3D16] hover:text-[#1A3D16]/90"
                       size={16}
-                      title="download form"
+                      title="Download PDF"
+                      onClick={() => handleDownload(student)}
                     />
                   </td>
                 </tr>
