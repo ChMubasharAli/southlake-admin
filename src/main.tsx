@@ -31,17 +31,22 @@ import {
   SingleProgramEnrolledStudents,
   SouthlakeCamps,
   Users,
+  LoginPage,
 } from "./components/index.ts";
 import Testing from "./components/Testing.tsx";
 
 const router = createBrowserRouter([
+  {
+    path: "/login", // Define /login route separately
+    element: <LoginPage />, // This route is publicly accessible
+  },
   {
     path: "/",
     element: <App />, // App is used as the layout
     // errorElement: <ErrorPage />,
     children: [
       {
-        index: true,
+        path: "/dashboard",
         element: <Dashboard />,
       },
       {

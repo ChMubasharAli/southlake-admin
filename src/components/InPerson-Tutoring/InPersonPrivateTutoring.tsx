@@ -95,7 +95,7 @@ export default function InPersonPrivateTutoring() {
                   {index + 1}.
                 </span>
                 <span className="text-lg font-semibold text-[#1A3D16] uppercase">
-                  {program.programName}
+                  {program?.programName || "Prpgram Name"}
                 </span>
               </div>
               <div className="flex items-center space-x-4">

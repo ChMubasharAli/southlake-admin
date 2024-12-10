@@ -18,5 +18,9 @@ import AnnualRegistration from "./Annual-Registration/AnnualRegistration";
 import Users from "./Users/Users";
 import Payment from "./Payment/Payment";
 
+import ProtectedRoute from "./ProtectedRoutes";
+import LoginPage from "./LoginPage";
 
-export {Sidebar,Dashboard, AfterSchool,AfterSchoolEditPage,EnrolledStudents, Programs,SingleProgramEditPage,SingleProgramEnrolledStudents, OnlinePrivateTutoring,OnlinePrivateTutoringEditPage,InPersonPrivateTutoring,InPersonPrivateTutoringEditPage,InPersonPrivateTutoringLessonEditPage,  MusicClasses,MusicClassesEditPage, SouthlakeCamps, AnnualRegistration, Users, Payment};
+
+
+export {Sidebar,Dashboard, AfterSchool,AfterSchoolEditPage,EnrolledStudents, Programs,SingleProgramEditPage,SingleProgramEnrolledStudents, OnlinePrivateTutoring,OnlinePrivateTutoringEditPage,InPersonPrivateTutoring,InPersonPrivateTutoringEditPage,InPersonPrivateTutoringLessonEditPage,  MusicClasses,MusicClassesEditPage, SouthlakeCamps, AnnualRegistration, Users, Payment, ProtectedRoute, LoginPage};

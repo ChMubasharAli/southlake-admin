@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Sidebar } from "./components";
+import { ProtectedRoute, Sidebar } from "./components";
 
 function App() {
   return (
@@ -8,7 +8,9 @@ function App() {
         <Sidebar />
       </aside>
       <section className="col-span-10 bg-white min-h-[100vh]">
-        <Outlet />
+        <ProtectedRoute>
+          <Outlet />
+        </ProtectedRoute>
       </section>
     </main>
   );

@@ -12,7 +12,7 @@ interface FormDataType {
   ages: string;
   location: string;
   dates: string;
-  slotsComplete: string;
+  capacity: string;
   time: string;
   discounts: string;
   classExperience: string;
@@ -20,6 +20,8 @@ interface FormDataType {
   image: string | null; // Image URL from Cloudinary
   slotsAvailable: string;
   price: number;
+  dateTo: string;
+  dateFrom: string;
 }
 
 const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
@@ -28,7 +30,7 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
     ages: "",
     location: "",
     dates: "",
-    slotsComplete: "",
+    capacity: "",
     time: "",
     discounts: "",
     classExperience: "",
@@ -36,6 +38,8 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
     image: null,
     slotsAvailable: "",
     price: 0,
+    dateTo: "",
+    dateFrom: "",
   });
 
   const [imageSelected, setImageSelected] = useState<File | null>(null);
@@ -112,7 +116,7 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
     Object.keys(formData).forEach((key) => {
       const fieldKey = key as keyof FormDataType;
       if (!formData[fieldKey] || (fieldKey === "image" && !imageSelected)) {
-        newErrors[fieldKey] = "This field is required";
+        newErrors[fieldKey] = ` required`;
       }
     });
 
@@ -168,10 +172,12 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
           <div>
+            <label htmlFor="programName" className="text-xs">
+              Program Name
+            </label>
             <input
               type="text"
               name="programName"
-              placeholder="Program Name"
               value={formData.programName}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
@@ -185,10 +191,12 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
             )}
           </div>
           <div>
+            <label htmlFor="slotsAvailable" className="text-xs">
+              Slots Available
+            </label>
             <input
-              type="text"
+              type="number"
               name="slotsAvailable"
-              placeholder="Slots Available"
               value={formData.slotsAvailable}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
@@ -204,10 +212,12 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
             )}
           </div>
           <div>
+            <label htmlFor="price" className="text-xs">
+              Program Price
+            </label>
             <input
               type="number"
               name="price"
-              placeholder="Enter price"
               value={formData.price === 0 ? "" : formData.price}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
@@ -221,10 +231,12 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
             )}
           </div>
           <div>
+            <label htmlFor="ages" className="text-xs">
+              Ages
+            </label>
             <input
               type="text"
               name="ages"
-              placeholder="Ages"
               value={formData.ages}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
@@ -238,10 +250,12 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
             )}
           </div>
           <div>
+            <label htmlFor="location" className="text-xs">
+              Location
+            </label>
             <input
               type="text"
               name="location"
-              placeholder="Location"
               value={formData.location}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
@@ -255,10 +269,12 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
             )}
           </div>
           <div>
+            <label htmlFor="dates" className="text-xs">
+              Days
+            </label>
             <input
-              type="date"
+              type="text"
               name="dates"
-              placeholder="Dates"
               value={formData.dates}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
@@ -271,30 +287,74 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
               <p className="text-red-500 text-sm mt-1">{errors.dates}</p>
             )}
           </div>
+
           <div>
+            <label htmlFor="dateTo" className="text-xs">
+              Start Date
+            </label>
             <input
-              type="text"
-              name="slotsComplete"
-              placeholder="Slots Complete"
-              value={formData.slotsComplete}
+              type="date"
+              name="dateTo"
+              value={formData.dateTo}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
-                errors.slotsComplete
+                errors.dates
                   ? "border-red-500"
                   : "focus:ring-2 focus:ring-[#1A3D16]"
               }`}
             />
-            {errors.slotsComplete && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.slotsComplete}
-              </p>
+            {errors.dateTo && (
+              <p className="text-red-500 text-sm mt-1">{errors.dateTo}</p>
             )}
           </div>
+
           <div>
+            <label htmlFor="dateTo" className="text-xs">
+              End Date
+            </label>
+            <input
+              type="date"
+              name="dateFrom"
+              value={formData.dateFrom}
+              onChange={handleChange}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
+                errors.dates
+                  ? "border-red-500"
+                  : "focus:ring-2 focus:ring-[#1A3D16]"
+              }`}
+            />
+            {errors.dateFrom && (
+              <p className="text-red-500 text-sm mt-1">{errors.dateFrom}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="capacity" className="text-xs">
+              Capacity
+            </label>
+            <input
+              type="text"
+              name="capacity"
+              value={formData.capacity}
+              onChange={handleChange}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
+                errors.dates
+                  ? "border-red-500"
+                  : "focus:ring-2 focus:ring-[#1A3D16]"
+              }`}
+            />
+            {errors.capacity && (
+              <p className="text-red-500 text-sm mt-1">{errors.capacity}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="time" className="text-xs">
+              Time
+            </label>
             <input
               type="text"
               name="time"
-              placeholder="Time"
               value={formData.time}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
@@ -308,10 +368,12 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
             )}
           </div>
           <div>
+            <label htmlFor="discounts" className="text-xs">
+              Discounts
+            </label>
             <input
               type="text"
               name="discounts"
-              placeholder="Discounts"
               value={formData.discounts}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
@@ -325,10 +387,12 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
             )}
           </div>
           <div>
+            <label htmlFor="classExperience" className="text-xs">
+              Clear Experience
+            </label>
             <input
               type="text"
               name="classExperience"
-              placeholder="Clear Experience"
               value={formData.classExperience}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
@@ -344,10 +408,12 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
             )}
           </div>
           <div>
+            <label htmlFor="time" className="text-xs">
+              Cancellation Policy
+            </label>
             <input
               type="text"
               name="cancellationPolicy"
-              placeholder="Cancellation Policy"
               value={formData.cancellationPolicy}
               onChange={handleChange}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 import { Loader } from "@mantine/core";
 import { FaDownload } from "react-icons/fa";
 
@@ -91,25 +92,52 @@ const EnrolledStudents: React.FC = () => {
       yOffset += lineHeight;
     };
 
+    const generateTable = (data: any[]) => {
+      const tableHeaders = ["Field", "Value"];
+      const tableData = data.map((item: Record<string, any>) => {
+        return [item.key, item.value || "N/A"];
+      });
+
+      doc.autoTable({
+        head: [tableHeaders],
+        body: tableData,
+        startY: yOffset,
+        theme: "grid",
+        headStyles: {
+          fillColor: [26, 61, 22],
+          textColor: [255, 255, 255],
+          fontSize: 10,
+        },
+        bodyStyles: { fontSize: 10 },
+        margin: { top: 10 },
+        styles: { cellPadding: 5, fontSize: 10 },
+      });
+
+      yOffset = doc.lastAutoTable.finalY + 10; // Adjust yOffset after the table
+    };
+
     for (const [key, value] of Object.entries(formData)) {
       if (key === "AfterSchoolProgramForms") {
         if (value.length > 0) {
-          doc.text("After School Program Forms Data:", 10, yOffset);
-          yOffset += 10;
-
           value.forEach((item: Record<string, any>, index: number) => {
-            doc.text(`Form ${index + 1}:`, 10, yOffset);
+            doc.text(`Program ${index + 1}:`, 10, yOffset);
             yOffset += 10;
 
-            for (const [itemKey, itemValue] of Object.entries(item)) {
-              addContent(itemKey, itemValue);
-            }
+            const formDataArray = Object.entries(item).map(
+              ([itemKey, itemValue]) => ({
+                key: itemKey,
+                value: itemValue,
+              })
+            );
+
+            generateTable(formDataArray);
           });
         } else {
           addContent(key, "No forms available");
         }
       } else {
-        addContent(key, value);
+        const dataArray = [{ key, value }];
+        generateTable(dataArray);
       }
     }
 
