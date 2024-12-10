@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { jsPDF } from "jspdf";
-import "jspdf-autotable";
 import { Loader } from "@mantine/core";
 import { FaDownload } from "react-icons/fa";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface AfterSchoolProgramForm {
   registrationId: number;
@@ -59,7 +59,8 @@ const EnrolledStudents: React.FC = () => {
     }
   }, [searchQuery, data]);
 
-  // PDF Generation
+  //  Generate Pdf Download
+
   const handleDownload = (registrationId: number) => {
     const formData = data.find(
       (form) => form.registrationId === registrationId
@@ -105,7 +106,7 @@ const EnrolledStudents: React.FC = () => {
         return [formatKey(item.key), item.value || "N/A"];
       });
 
-      doc.autoTable({
+      autoTable(doc, {
         head: [tableHeaders],
         body: tableData,
         startY: yOffset,
@@ -120,7 +121,11 @@ const EnrolledStudents: React.FC = () => {
         styles: { cellPadding: 5, fontSize: 10 },
       });
 
-      yOffset = doc.lastAutoTable.finalY + 10; // Adjust yOffset after the table
+      // Update yOffset after the table
+      const autoTableInfo = (doc as any).lastAutoTable;
+      if (autoTableInfo) {
+        yOffset = autoTableInfo.finalY + 10;
+      }
     };
 
     for (const [key, value] of Object.entries(formData)) {
