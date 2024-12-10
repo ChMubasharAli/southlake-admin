@@ -77,8 +77,15 @@ const EnrolledStudents: React.FC = () => {
 
     let yOffset = 20; // Starting vertical position
 
+    const formatKey = (key: string) => {
+      return key
+        .replace(/([A-Z])/g, " $1") // Split camelCase
+        .replace(/^./, (str) => str.toUpperCase()) // Capitalize the first letter
+        .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize all words
+    };
+
     const addContent = (key: string, value: any) => {
-      const formattedKey = key.replace(/([A-Z])/g, " $1"); // Split camelCase keys
+      const formattedKey = formatKey(key);
       const formattedValue = value || "N/A";
       const lineHeight = 10;
 
@@ -95,7 +102,7 @@ const EnrolledStudents: React.FC = () => {
     const generateTable = (data: any[]) => {
       const tableHeaders = ["Field", "Value"];
       const tableData = data.map((item: Record<string, any>) => {
-        return [item.key, item.value || "N/A"];
+        return [formatKey(item.key), item.value || "N/A"];
       });
 
       doc.autoTable({
