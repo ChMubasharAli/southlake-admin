@@ -23,7 +23,7 @@ interface Program {
   dateTo: string;
 }
 
-export default function SingleProgramEditPage() {
+export default function AfterSchoolEditPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const programData = location.state as Program;

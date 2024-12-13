@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Input } from "@mantine/core";
 
+// Program interface (for types)
 interface Program {
   id: number;
   programName: string;
@@ -17,27 +19,36 @@ interface Program {
   image: string;
   slotsAvailable: string;
   price: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  dateFrom: string;
+  dateTo: string;
 }
 
 export default function SingleProgramEditPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const programData = location.state as Program;
+
   const displayedProgramName = programData.programName;
+
   const [program, setProgram] = useState<Program>({ ...programData });
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setProgram((prev) => ({
       ...prev,
       [name]: value,
     }));
-    const textarea = e.target;
-    textarea.style.height = "auto"; // Reset height
-    textarea.style.height = `${textarea.scrollHeight}px`; // Adjust height dynamically
+
+    // Adjust textarea height if needed
+    if (e.target instanceof HTMLTextAreaElement) {
+      const textarea = e.target;
+      textarea.style.height = "auto"; // Reset height
+      textarea.style.height = `${textarea.scrollHeight}px`; // Adjust height dynamically
+    }
   };
 
   const handleImageUpload = async (): Promise<string> => {
@@ -45,15 +56,17 @@ export default function SingleProgramEditPage() {
 
     const formData = new FormData();
     formData.append("file", imageFile);
-    formData.append("upload_preset", "southlake"); // Replace with Cloudinary preset
+    formData.append("upload_preset", "southlake");
 
     try {
+      setLoading(true);
       const response = await axios.post(
         `https://api.cloudinary.com/v1_1/dhrfgf2dz/upload`,
         formData
       );
       return response.data.secure_url;
     } catch (error) {
+      setLoading(false);
       console.error("Image upload failed:", error);
       toast.error("Image upload failed. Please try again.");
       return program.image;
@@ -67,7 +80,7 @@ export default function SingleProgramEditPage() {
       image: imageUrl,
     };
     try {
-      console.log(program.id);
+      setLoading(true);
       await axios.put(
         `https://southlakebackend.onrender.com/api/updateSingleProgram/${program.id}`,
         updatedProgram
@@ -75,6 +88,7 @@ export default function SingleProgramEditPage() {
       toast.success("Program updated successfully!");
       navigate(-1);
     } catch (error) {
+      setLoading(false);
       console.error("Failed to update program:", error);
       toast.error("Failed to update the program. Please try again.");
     }
@@ -104,21 +118,19 @@ export default function SingleProgramEditPage() {
         <div className="flex-1">
           <div className="mb-4">
             <label className="font-semibold text-[#1A3D16]">Program Name</label>
-            <textarea
-              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+            <Input
+              className="w-full  mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
               name="programName"
               value={program.programName}
-              rows={1}
               onChange={handleInputChange}
             />
           </div>
           <div className="mb-4">
             <label className="font-semibold text-[#1A3D16]">Price</label>
-            <textarea
-              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+            <Input
+              className="w-full  mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
               name="price"
               value={program.price.toString()}
-              rows={1}
               onChange={handleInputChange}
             />
           </div>
@@ -126,11 +138,19 @@ export default function SingleProgramEditPage() {
             <label className="font-semibold text-[#1A3D16]">
               Slots Available
             </label>
-            <textarea
-              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+            <Input
+              className="w-full  mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
               name="slotsAvailable"
               value={program.slotsAvailable}
-              rows={1}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="font-semibold text-[#1A3D16]">Capacity</label>
+            <Input
+              className="w-full  mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              name="capacity"
+              value={program.capacity}
               onChange={handleInputChange}
             />
           </div>
@@ -140,23 +160,44 @@ export default function SingleProgramEditPage() {
       <div className="mt-6">
         <h3 className="text-lg font-bold text-[#1A3D16] mb-2">Details</h3>
         <div className="grid grid-cols-2 gap-6 text-sm">
+          {/* Dates Sections Date From and DATE TO  */}
+          <div>
+            <label className="font-semibold text-[#1A3D16]">Start Date</label>
+            <Input
+              className="w-full  mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              name="dateFrom"
+              type="date"
+              value={program.dateFrom}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div>
+            <label className="font-semibold text-[#1A3D16]">End Date</label>
+            <Input
+              className="w-full  mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              name="dateTo"
+              type="date"
+              value={program.dateTo}
+              onChange={handleInputChange}
+            />
+          </div>
+
           {[
             { label: "Ages", name: "ages" },
             { label: "Location", name: "location" },
-            { label: "Dates", name: "dates" },
-            { label: "Capacity", name: "capacity" },
             { label: "Time", name: "time" },
+            { label: "Days", name: "dates" },
             { label: "Discounts", name: "discounts" },
           ].map((field) => (
             <div key={field.name}>
               <label className="font-semibold text-[#1A3D16]">
                 {field.label}
               </label>
-              <textarea
-                className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              <Input
+                className="w-full mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
                 name={field.name}
                 value={(program as any)[field.name]}
-                rows={1}
                 onChange={handleInputChange}
               />
             </div>
@@ -167,39 +208,45 @@ export default function SingleProgramEditPage() {
       <div className="mt-8">
         <h3 className="text-lg font-bold text-[#1A3D16] mb-4">Description</h3>
         <div className="space-y-4">
+          {/* Class Experience (auto-resizing textarea) */}
           <div>
             <label className="font-semibold text-[#1A3D16]">
               Class Experience
             </label>
             <textarea
-              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
               name="classExperience"
               value={program.classExperience}
-              rows={3}
               onChange={handleInputChange}
+              className="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16] resize-none"
+              rows={3}
             />
           </div>
+
+          {/* Cancellation Policy (auto-resizing textarea) */}
           <div>
             <label className="font-semibold text-[#1A3D16]">
               Cancellation Policy
             </label>
             <textarea
-              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
               name="cancellationPolicy"
               value={program.cancellationPolicy}
-              rows={3}
               onChange={handleInputChange}
+              className="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16] resize-none"
+              rows={3}
             />
           </div>
         </div>
       </div>
 
-      <button
-        className=" px-4 py-2 self-end text-white rounded-md w-fit button-green font-Montserrat bg-[#1A3D16] border-2 border-[#1A3D16] hover:border-[#1A3D16] hover:!text-black font-semibold transition-all duration-300 "
-        onClick={handleSave}
-      >
-        Submit
-      </button>
+      <div className="mt-8 flex justify-end">
+        <button
+          disabled={loading}
+          onClick={handleSave}
+          className="py-2 px-4 bg-[#1A3D16] text-white rounded-md"
+        >
+          {loading ? "Loading..." : "Save Program"}
+        </button>
+      </div>
     </div>
   );
 }

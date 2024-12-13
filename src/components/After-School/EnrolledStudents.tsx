@@ -4,6 +4,7 @@ import { Loader } from "@mantine/core";
 import { FaDownload } from "react-icons/fa";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import * as XLSX from "xlsx"; // Import xlsx library
 
 interface AfterSchoolProgramForm {
   registrationId: number;
@@ -59,8 +60,23 @@ const EnrolledStudents: React.FC = () => {
     }
   }, [searchQuery, data]);
 
-  //  Generate Pdf Download
+  // Excel Download Function
+  const handleExcelDownload = () => {
+    const excelData = filteredData.map((form) => ({
+      "Registration ID": form.registrationId || " ",
+      "Expiry Date": form.expiryDate || " ",
+      "Parent First Name": form.parentFirstName || " ",
+      "Parent Last Name": form.parentLastName || " ",
+      "Program Bought": form.AfterSchoolProgramForms.length || " ",
+    }));
 
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Enrolled Students");
+    XLSX.writeFile(wb, "Enrolled_Students.xlsx");
+  };
+
+  // Generate Pdf Download (Excluding AfterSchoolProgramForms)
   const handleDownload = (registrationId: number) => {
     const formData = data.find(
       (form) => form.registrationId === registrationId
@@ -85,25 +101,26 @@ const EnrolledStudents: React.FC = () => {
         .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize all words
     };
 
-    const addContent = (key: string, value: any) => {
-      const formattedKey = formatKey(key);
-      const formattedValue = value || "N/A";
-      const lineHeight = 10;
-
-      if (yOffset + lineHeight > 280) {
-        // Check if content exceeds page height
-        doc.addPage();
-        yOffset = 10; // Reset vertical position for new page
-      }
-
-      doc.text(`${formattedKey}: ${formattedValue}`, 10, yOffset);
-      yOffset += lineHeight;
-    };
-
     const generateTable = (data: any[]) => {
       const tableHeaders = ["Field", "Value"];
       const tableData = data.map((item: Record<string, any>) => {
-        return [formatKey(item.key), item.value || "N/A"];
+        if (Array.isArray(item.value)) {
+          return [
+            formatKey(item.key),
+            item.value
+              .map((subItem: any) => {
+                if (typeof subItem === "object") {
+                  return Object.entries(subItem)
+                    .map(([subKey, subValue]) => `${subKey}: ${subValue}`)
+                    .join(", ");
+                }
+                return subItem;
+              })
+              .join(", "), // Join array elements into a single string
+          ];
+        } else {
+          return [formatKey(item.key), item.value || "N/A"];
+        }
       });
 
       autoTable(doc, {
@@ -121,7 +138,6 @@ const EnrolledStudents: React.FC = () => {
         styles: { cellPadding: 5, fontSize: 10 },
       });
 
-      // Update yOffset after the table
       const autoTableInfo = (doc as any).lastAutoTable;
       if (autoTableInfo) {
         yOffset = autoTableInfo.finalY + 10;
@@ -130,7 +146,7 @@ const EnrolledStudents: React.FC = () => {
 
     for (const [key, value] of Object.entries(formData)) {
       if (key === "AfterSchoolProgramForms") {
-        if (value.length > 0) {
+        if (Array.isArray(value)) {
           value.forEach((item: Record<string, any>, index: number) => {
             doc.text(`Program ${index + 1}:`, 10, yOffset);
             yOffset += 10;
@@ -145,7 +161,7 @@ const EnrolledStudents: React.FC = () => {
             generateTable(formDataArray);
           });
         } else {
-          addContent(key, "No forms available");
+          generateTable([{ key, value: "No forms available" }]);
         }
       } else {
         const dataArray = [{ key, value }];
@@ -160,11 +176,17 @@ const EnrolledStudents: React.FC = () => {
     <div className="p-6 lg:max-w-[80%] mx-auto ">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-[#1A3D16] ">
-          After School Program and Enrichment <br />
-          Enrolled Students
+          After School Program Enrolled Students
         </h2>
+        {/* Excel Download Button */}
+        <button
+          onClick={handleExcelDownload}
+          className="px-4 py-2 text-white rounded-md w-fit button-green font-Montserrat bg-[#1A3D16] border-2 border-[#1A3D16] hover:border-[#1A3D16] hover:!text-black font-semibold transition-all duration-300"
+        >
+          Download Excel
+        </button>
       </div>
-      <div className="  bg-white p-8 rounded-lg shadow-lg">
+      <div className="bg-white p-8 rounded-lg shadow-lg">
         <input
           type="text"
           value={searchQuery}
@@ -207,7 +229,6 @@ const EnrolledStudents: React.FC = () => {
                   <td className="py-3 px-6 text-left">
                     {form.AfterSchoolProgramForms.length}
                   </td>
-
                   <td className="py-3 px-6 text-center flex justify-center">
                     <FaDownload
                       onClick={() => handleDownload(form.registrationId)}

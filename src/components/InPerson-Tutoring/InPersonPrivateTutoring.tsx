@@ -104,7 +104,7 @@ export default function InPersonPrivateTutoring() {
                 </span>
                 <button
                   onClick={() => {
-                    if (program.id === 6) {
+                    if (program.id === 18) {
                       navigate("/person-private-tutoring-lesson-edit-page", {
                         state: program,
                       });

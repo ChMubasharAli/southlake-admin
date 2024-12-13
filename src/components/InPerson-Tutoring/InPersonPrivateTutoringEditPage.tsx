@@ -16,6 +16,7 @@ interface Program {
   cancellationPolicy: string;
   image: string;
   slotsAvailable: string;
+  description: string;
   price: number;
   numberOfHours: { hours: string; price: string }[]; // Updated structure
   createdAt?: Date;
@@ -152,7 +153,9 @@ export default function OnlinePrivateTutoringEditPage() {
             />
           </div>
           <div className="mb-4">
-            <label className="font-semibold text-[#1A3D16]">Price</label>
+            <label className="font-semibold text-[#1A3D16]">
+              Starting Price
+            </label>
             <textarea
               className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
               name="price"
@@ -176,56 +179,14 @@ export default function OnlinePrivateTutoringEditPage() {
         </div>
       </div>
 
-      <div className="mt-6">
-        <h3 className="text-lg font-bold text-[#1A3D16] mb-2">Details</h3>
-        <div className="grid grid-cols-2 gap-6 text-sm">
-          {[
-            { label: "Ages", name: "ages" },
-            { label: "Location", name: "location" },
-            { label: "Dates", name: "dates" },
-            { label: "Capacity", name: "capacity" },
-            { label: "Time", name: "time" },
-            { label: "Discounts", name: "discounts" },
-          ].map((field) => (
-            <div key={field.name}>
-              <label className="font-semibold text-[#1A3D16]">
-                {field.label}
-              </label>
-              <textarea
-                className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-                name={field.name}
-                value={(program as any)[field.name]}
-                rows={1}
-                onChange={handleInputChange}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
       <div className="mt-8">
-        <h3 className="text-lg font-bold text-[#1A3D16] mb-4">Description</h3>
+        <h3 className="text-lg font-bold text-[#1A3D16]">Description</h3>
         <div className="space-y-4">
           <div>
-            <label className="font-semibold text-[#1A3D16]">
-              Class Experience
-            </label>
             <textarea
               className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-              name="classExperience"
-              value={program.classExperience}
-              rows={3}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div>
-            <label className="font-semibold text-[#1A3D16]">
-              Cancellation Policy
-            </label>
-            <textarea
-              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-              name="cancellationPolicy"
-              value={program.cancellationPolicy}
+              name="description"
+              value={program.description}
               rows={3}
               onChange={handleInputChange}
             />
@@ -241,7 +202,7 @@ export default function OnlinePrivateTutoringEditPage() {
             <div key={index} className="flex items-center space-x-4">
               <input
                 type="text"
-                placeholder="Session Name"
+                placeholder="Number of Hours"
                 className="w-1/2 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
                 value={session.hours}
                 onChange={(e) =>
@@ -250,7 +211,7 @@ export default function OnlinePrivateTutoringEditPage() {
               />
               <input
                 type="text"
-                placeholder="Session Price"
+                placeholder=" Price"
                 className="w-1/2 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
                 value={session.price}
                 onChange={(e) =>

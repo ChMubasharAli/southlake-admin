@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Import axios
 import { toast } from "react-toastify";
+import { PasswordInput, TextInput } from "@mantine/core";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -20,12 +21,11 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       setLoading(true);
       // Sending login request using axios
       const response = await axios.post(
-        "http://localhost:10000/api/loginAdmin",
+        "https://southlakebackend.onrender.com/api/loginAdmin",
         {
           email,
           password,
@@ -59,39 +59,26 @@ const LoginPage = () => {
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 text-sm font-medium mb-2"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+            <TextInput
+              withAsterisk
+              label="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
+              placeholder="your email"
             />
           </div>
           <div className="mb-6">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 text-sm font-medium mb-2"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+            <PasswordInput
+              label="Input label"
+              withAsterisk
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
           </div>
 
           <button
+            disabled={loading}
             type="submit"
             className="w-full cursor-pointer  block  py-2 text-center rounded-lg bg-[#1A3D16]  text-white"
           >

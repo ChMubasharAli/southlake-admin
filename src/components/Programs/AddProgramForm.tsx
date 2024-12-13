@@ -294,26 +294,6 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
             </label>
             <input
               type="date"
-              name="dateTo"
-              value={formData.dateTo}
-              onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
-                errors.dates
-                  ? "border-red-500"
-                  : "focus:ring-2 focus:ring-[#1A3D16]"
-              }`}
-            />
-            {errors.dateTo && (
-              <p className="text-red-500 text-sm mt-1">{errors.dateTo}</p>
-            )}
-          </div>
-
-          <div>
-            <label htmlFor="dateTo" className="text-xs">
-              End Date
-            </label>
-            <input
-              type="date"
               name="dateFrom"
               value={formData.dateFrom}
               onChange={handleChange}
@@ -325,6 +305,26 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
             />
             {errors.dateFrom && (
               <p className="text-red-500 text-sm mt-1">{errors.dateFrom}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="dateTo" className="text-xs">
+              End Date
+            </label>
+            <input
+              type="date"
+              name="dateTo"
+              value={formData.dateTo}
+              onChange={handleChange}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
+                errors.dates
+                  ? "border-red-500"
+                  : "focus:ring-2 focus:ring-[#1A3D16]"
+              }`}
+            />
+            {errors.dateTo && (
+              <p className="text-red-500 text-sm mt-1">{errors.dateTo}</p>
             )}
           </div>
 

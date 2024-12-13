@@ -14,6 +14,7 @@ import InPersonPrivateTutoringLessonEditPage from "./InPerson-Tutoring/InPersonP
 import MusicClasses from "./Music-Classes/MusicClasses";
 import MusicClassesEditPage from "./Music-Classes/MusicClassesEditPage";
 import SouthlakeCamps from "./Southlake-Camps/SouthlakeCamps";
+import SouthlakeCampEditPage from "./Southlake-Camps/SouthlakeCampEditPage";
 import AnnualRegistration from "./Annual-Registration/AnnualRegistration";
 import Users from "./Users/Users";
 import Payment from "./Payment/Payment";
@@ -23,4 +24,4 @@ import LoginPage from "./LoginPage";
 
 
 
-export {Sidebar,Dashboard, AfterSchool,AfterSchoolEditPage,EnrolledStudents, Programs,SingleProgramEditPage,SingleProgramEnrolledStudents, OnlinePrivateTutoring,OnlinePrivateTutoringEditPage,InPersonPrivateTutoring,InPersonPrivateTutoringEditPage,InPersonPrivateTutoringLessonEditPage,  MusicClasses,MusicClassesEditPage, SouthlakeCamps, AnnualRegistration, Users, Payment, ProtectedRoute, LoginPage};
+export {Sidebar,Dashboard, AfterSchool,AfterSchoolEditPage,EnrolledStudents, Programs,SingleProgramEditPage,SingleProgramEnrolledStudents, OnlinePrivateTutoring,OnlinePrivateTutoringEditPage,InPersonPrivateTutoring,InPersonPrivateTutoringEditPage,InPersonPrivateTutoringLessonEditPage,  MusicClasses,MusicClassesEditPage, SouthlakeCamps,SouthlakeCampEditPage, AnnualRegistration, Users, Payment, ProtectedRoute, LoginPage};

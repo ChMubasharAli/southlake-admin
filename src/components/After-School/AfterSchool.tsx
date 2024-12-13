@@ -42,7 +42,7 @@ export default function AfterSchool() {
 
   // Navigate to Enrolled Student Page
   const gotoEnrolledStudentPage = () => {
-    navigate("/enrolled-students");
+    navigate("/after-school-program-enrolled-students");
   };
 
   return (

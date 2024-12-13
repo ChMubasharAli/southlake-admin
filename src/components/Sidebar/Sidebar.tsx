@@ -12,9 +12,9 @@ export default function Sidebar() {
     navigate("/login");
   };
   const menuItems = [
-    { name: "Dashboard", path: "/dashboard" },
+    // { name: "Dashboard", path: "/dashboard" },
     { name: "After School", path: "/after-school" },
-    { name: "Single Programs", path: "/programs" },
+    { name: "Enrichment Classes", path: "/programs" },
     { name: "Online Private", path: "/private" },
     { name: "In Person Tutoring", path: "/person-private-tutoring" },
     { name: "Music Classes", path: "/music-classes" },
@@ -24,7 +24,7 @@ export default function Sidebar() {
     { name: "Payment", path: "/payment" },
   ];
   return (
-    <div className=" bg-white border-r-2 border-r-black min-h-screen sticky top-0 left-0 font-Montserrat">
+    <div className=" bg-white border-r-2 border-r-black min-h-screen sticky top-0 left-0 font-Montserrat  px-4">
       <div className="flex justify-center items-center py-4 md:h-[100px]  2xl:h-[200px]">
         <img src={logo} alt="Logo" className="w-[40%]" />
       </div>

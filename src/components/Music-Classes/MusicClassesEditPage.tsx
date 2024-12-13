@@ -12,8 +12,7 @@ interface Program {
   capacity: string;
   time: string;
   discounts: string;
-  classExperience: string;
-  cancellationPolicy: string;
+  description: string;
   image: string;
   slotsAvailable: string;
   amount: number;
@@ -49,7 +48,7 @@ export default function MusicClassesEditPage() {
     value: string
   ) => {
     const updatedLessonLength = [...program.lessonLength]; // Make a copy of lessonLength
-    updatedLessonLength[index][field] = value; // Update the specific field
+    updatedLessonLength[index][field] = value.trimStart(); // Update the specific field
     setProgram((prev) => ({
       ...prev,
       lessonLength: updatedLessonLength, // Correct the property name here
@@ -151,7 +150,9 @@ export default function MusicClassesEditPage() {
             />
           </div>
           <div className="mb-4">
-            <label className="font-semibold text-[#1A3D16]">Price</label>
+            <label className="font-semibold text-[#1A3D16]">
+              Starting Price
+            </label>
             <textarea
               className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
               name="amount"
@@ -175,23 +176,19 @@ export default function MusicClassesEditPage() {
         </div>
       </div>
 
-      <div className="mt-6">
-        <h3 className="text-lg font-bold text-[#1A3D16] mb-2">Details</h3>
-        <div className="grid grid-cols-2 gap-6 text-sm">
-          {[{ label: "Instrument", name: "instrument" }].map((field) => (
-            <div key={field.name}>
-              <label className="font-semibold text-[#1A3D16]">
-                {field.label}
-              </label>
-              <textarea
-                className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-                name={field.name}
-                value={(program as any)[field.name]}
-                rows={1}
-                onChange={handleInputChange}
-              />
-            </div>
-          ))}
+      <div className="mt-8">
+        <h3 className="text-lg font-bold text-[#1A3D16] ">Description</h3>
+        <div className="space-y-4">
+          {/* Class Experience (auto-resizing textarea) */}
+          <div>
+            <textarea
+              name="description"
+              value={program.description}
+              onChange={handleInputChange}
+              className="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16] resize-none"
+              rows={3}
+            />
+          </div>
         </div>
       </div>
 

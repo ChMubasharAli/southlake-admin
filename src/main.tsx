@@ -30,6 +30,7 @@ import {
   SingleProgramEditPage,
   SingleProgramEnrolledStudents,
   SouthlakeCamps,
+  SouthlakeCampEditPage,
   Users,
   LoginPage,
 } from "./components/index.ts";
@@ -58,7 +59,7 @@ const router = createBrowserRouter([
         element: <AfterSchoolEditPage />,
       },
       {
-        path: "/enrolled-students",
+        path: "/after-school-program-enrolled-students",
         element: <EnrolledStudents />,
       },
       {
@@ -104,6 +105,10 @@ const router = createBrowserRouter([
       {
         path: "/southlake-camps",
         element: <SouthlakeCamps />,
+      },
+      {
+        path: "/southlake-camp-edit-page",
+        element: <SouthlakeCampEditPage />,
       },
       {
         path: "/annual-registration",

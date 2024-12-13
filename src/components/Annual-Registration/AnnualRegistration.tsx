@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { FaDownload } from "react-icons/fa";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
 import axios from "axios";
 import { Loader } from "@mantine/core";
+import autoTable from "jspdf-autotable";
 
 interface Student {
   id: number;
@@ -50,38 +50,72 @@ export default function AnnualRegistration() {
   const handleDownload = (student: Student) => {
     const doc = new jsPDF();
 
-    // Add title
+    // Title for the PDF
     doc.setFontSize(18);
-    doc.text("Enrolled Student Details", 14, 20);
+    doc.text("Enrolled Student Details", 10, 10);
+    doc.setFontSize(12);
 
-    // Add student details
-    const userDetails = [
-      ["Parent Name", `${student.parentFirstName} ${student.parentLastName}`],
-      ["Child Name", `${student.firstName} ${student.lastName}`],
-      ["Address", student.address],
-      ["City", student.city],
-      ["State", student.state],
-      ["Country", student.country],
-      ["Zip Code", student.zipCode.toString()],
-      ["Phone", student.phone],
-      ["Email", student.email],
-      ["Payment Amount", `$${student.amount}`],
-      ["Registration ID", student.registrationId.toString()],
-      ["Expiry Date", new Date(student.expiryDate).toLocaleDateString()],
+    let yOffset = 20; // Starting vertical position
+
+    const formatKey = (key: string) => {
+      return key
+        .replace(/([A-Z])/g, " $1") // Split camelCase
+        .replace(/^./, (str) => str.toUpperCase()) // Capitalize the first letter
+        .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize all words
+    };
+
+    // Generate Table
+    const generateTable = (data: any[]) => {
+      const tableHeaders = ["Field", "Value"];
+      const tableData = data.map((item: Record<string, any>) => {
+        return [formatKey(item.key), item.value || "N/A"];
+      });
+
+      autoTable(doc, {
+        head: [tableHeaders],
+        body: tableData,
+        startY: yOffset,
+        theme: "grid",
+        headStyles: {
+          fillColor: [26, 61, 22],
+          textColor: [255, 255, 255],
+          fontSize: 10,
+        },
+        bodyStyles: { fontSize: 10 },
+        margin: { top: 10 },
+        styles: { cellPadding: 5, fontSize: 10 },
+      });
+
+      // Update yOffset after the table
+      const autoTableInfo = (doc as any).lastAutoTable;
+      if (autoTableInfo) {
+        yOffset = autoTableInfo.finalY + 10;
+      }
+    };
+
+    // Add table for detailed data
+    const studentDataArray = [
+      {
+        key: "Parent Name",
+        value: `${student.parentFirstName} ${student.parentLastName}`,
+      },
+      { key: "Child Name", value: `${student.firstName} ${student.lastName}` },
+      { key: "Address", value: student.address },
+      { key: "City", value: student.city },
+      { key: "State", value: student.state },
+      { key: "Country", value: student.country },
+      { key: "Zip Code", value: student.zipCode.toString() },
+      { key: "Phone", value: student.phone },
+      { key: "Email", value: student.email },
+      { key: "Payment Amount", value: `$${student.amount}` },
+      { key: "Registration ID", value: student.registrationId.toString() },
+      {
+        key: "Expiry Date",
+        value: new Date(student.expiryDate).toLocaleDateString(),
+      },
     ];
 
-    userDetails.forEach(([key, value], index) => {
-      doc.setFontSize(12);
-      doc.text(`${key}: ${value}`, 14, 30 + index * 10);
-    });
-
-    // Add footer
-    doc.setFontSize(10);
-    doc.text(
-      "Generated on: " + new Date().toLocaleString(),
-      14,
-      doc.internal.pageSize.height - 10
-    );
+    generateTable(studentDataArray);
 
     // Save PDF
     doc.save(`${student.firstName}_${student.lastName}_Details.pdf`);
@@ -89,20 +123,18 @@ export default function AnnualRegistration() {
 
   if (loading) {
     return (
-      <div className=" h-[100%] flex items-center justify-center ">
+      <div className="h-[100%] flex items-center justify-center">
         <Loader color="#1A3D16" size="lg" />
       </div>
     );
   }
 
   return (
-    <div className="p-12 font-Montserrat">
+    <div className="p-6 lg:max-w-[80%] mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#1A3D16] ">
-          Enrolled Students
-        </h2>
+        <h2 className="text-2xl font-bold text-[#1A3D16]">Enrolled Students</h2>
       </div>
-      <div className="p-4">
+      <div className="bg-white p-8 rounded-lg shadow-lg">
         <div className="overflow-x-auto shadow-lg">
           <table className="min-w-full bg-white border border-gray-300 shadow-lg">
             <thead>
@@ -142,7 +174,7 @@ export default function AnnualRegistration() {
                   <td className="py-3 px-6 text-left whitespace-nowrap">
                     ${student.amount}
                   </td>
-                  <td className="py-3 px-6 text-center  flex items-center justify-center">
+                  <td className="py-3 px-6 text-center flex items-center justify-center">
                     <FaDownload
                       className="cursor-pointer text-[#1A3D16] hover:text-[#1A3D16]/90"
                       size={16}

@@ -51,7 +51,7 @@ export default function OnlinePrivateTutoring() {
         <h2 className="text-2xl font-bold text-[#1A3D16] uppercase ">
           Online Private Tutoring
         </h2>
-        -
+
         <div className="flex gap-8 items-center">
           <button
             onClick={gotoEnrolledStudentPage}

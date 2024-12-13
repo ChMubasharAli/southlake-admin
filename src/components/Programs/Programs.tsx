@@ -43,14 +43,14 @@ export default function Programs() {
 
   // Navigate to Enrolled Student Page
   const gotoEnrolledStudentPage = () => {
-    navigate("/enrolled-students");
+    navigate("#");
   };
 
   return (
     <div className="p-12 font-Montserrat">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-[#1A3D16] uppercase ">
-          Single Program Programs
+          Enrichment Classes
         </h2>
         -
         <div className="flex gap-8 items-center">

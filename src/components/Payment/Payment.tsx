@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { jsPDF } from "jspdf";
 import { FaDownload } from "react-icons/fa";
+import autoTable from "jspdf-autotable";
 
 interface ProgramData {
   [key: string]: any;
@@ -50,21 +51,55 @@ const Payment: React.FC = () => {
     doc.setFontSize(18);
     doc.text(`${programName} Details`, 10, 10);
     doc.setFontSize(12);
-
     doc.text(`Registration ID: ${registrationId}`, 10, 20);
 
     let yOffset = 30;
-    programData.forEach((item, index) => {
-      doc.text(`Entry ${index + 1}:`, 10, yOffset);
-      yOffset += 10;
-      Object.entries(item).forEach(([key, value]) => {
-        doc.text(`${key}: ${value}`, 10, yOffset);
-        yOffset += 10;
-        if (yOffset > 270) {
-          doc.addPage();
-          yOffset = 10;
-        }
+
+    // Generate table
+    const generateTable = (data: any[]) => {
+      const tableHeaders = ["Field", "Value"];
+      const tableData = data.map((item: Record<string, any>) => {
+        return [formatKey(item.key), item.value || "N/A"];
       });
+
+      autoTable(doc, {
+        head: [tableHeaders],
+        body: tableData,
+        startY: yOffset,
+        theme: "grid",
+        headStyles: {
+          fillColor: [26, 61, 22],
+          textColor: [255, 255, 255],
+          fontSize: 10,
+        },
+        bodyStyles: { fontSize: 10 },
+        margin: { top: 10 },
+        styles: { cellPadding: 5, fontSize: 10 },
+      });
+
+      // Update yOffset after the table
+      const autoTableInfo = (doc as any).lastAutoTable;
+      if (autoTableInfo) {
+        yOffset = autoTableInfo.finalY + 10;
+      }
+    };
+
+    const formatKey = (key: string) => {
+      return key
+        .replace(/([A-Z])/g, " $1") // Split camelCase
+        .replace(/^./, (str) => str.toUpperCase()) // Capitalize the first letter
+        .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize all words
+    };
+
+    // Iterate through the data and create a table for each entry
+    programData.forEach((item, index) => {
+      doc.text(`Form ${index + 1}:`, 10, yOffset);
+      yOffset += 10;
+      const programDataArray = Object.entries(item).map(([key, value]) => ({
+        key,
+        value,
+      }));
+      generateTable(programDataArray);
     });
 
     doc.save(`${programName}_Registration_${registrationId}.pdf`);
@@ -85,9 +120,9 @@ const Payment: React.FC = () => {
   return (
     <div className="p-6 max-w-full mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#1A3D16] ">Pyments Details</h2>
+        <h2 className="text-2xl font-bold text-[#1A3D16]">Payments Details</h2>
       </div>
-      <div className="max-w-full mx-auto bg-white ">
+      <div className="max-w-full mx-auto bg-white">
         {/* Search Input */}
         <div className="rounded-lg shadow-lg">
           <input
@@ -144,8 +179,8 @@ const Payment: React.FC = () => {
                 <td className="py-3 px-6 text-left">
                   {student.parentFirstName} {student.parentLastName}
                 </td>
-                <td className="py-3 px-6 text-left ">${student.amount}</td>
-                <td className="py-3 px-6 text-center ">
+                <td className="py-3 px-6 text-left">${student.amount}</td>
+                <td className="py-3 px-6 text-center">
                   {(student.AfterSchoolProgramForms?.length || 0) > 0 && (
                     <FaDownload
                       onClick={() =>
@@ -161,7 +196,7 @@ const Payment: React.FC = () => {
                     />
                   )}
                 </td>
-                <td className="py-3 px-6 text-center ">
+                <td className="py-3 px-6 text-center">
                   {(student.MusciProgramForms?.length || 0) > 0 && (
                     <FaDownload
                       onClick={() =>
@@ -177,7 +212,7 @@ const Payment: React.FC = () => {
                     />
                   )}
                 </td>
-                <td className="py-3 px-6 text-center ">
+                <td className="py-3 px-6 text-center">
                   {(student.OnlineTutoringForms?.length || 0) > 0 && (
                     <FaDownload
                       onClick={() =>
@@ -193,7 +228,7 @@ const Payment: React.FC = () => {
                     />
                   )}
                 </td>
-                <td className="py-3 px-6 text-center ">
+                <td className="py-3 px-6 text-center">
                   {(student.PrivateAndTestPrepForms?.length || 0) > 0 && (
                     <FaDownload
                       onClick={() =>
@@ -209,7 +244,7 @@ const Payment: React.FC = () => {
                     />
                   )}
                 </td>
-                <td className="py-3 px-6 text-center ">
+                <td className="py-3 px-6 text-center">
                   {(student.SingleProgramForms?.length || 0) > 0 && (
                     <FaDownload
                       onClick={() =>
@@ -225,7 +260,7 @@ const Payment: React.FC = () => {
                     />
                   )}
                 </td>
-                <td className="py-3 px-6 text-center ">
+                <td className="py-3 px-6 text-center">
                   {(student.CampForms?.length || 0) > 0 && (
                     <FaDownload
                       onClick={() =>

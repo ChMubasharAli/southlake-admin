@@ -5,19 +5,24 @@ import { toast } from "react-toastify";
 
 interface Program {
   id: number;
-  programName: string;
-  classExperience: string;
-  price: number;
   image: string;
-  sessionType: { name: string; price: string }[]; // Updated structure
+  campTitle: string;
+  campSubTitle: string;
+  week1: string;
+  week2: string;
+  time: string;
+  cost: string;
+  minimumEnrollment: string;
+  ageRequirement: string;
+  description: string;
 }
 
-export default function OnlinePrivateTutoringEditPage() {
+export default function SouthlakeCampEditPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const programData = location.state as Program;
 
-  const displayedProgramName = programData.programName;
+  const displayedProgramName = programData.campTitle;
 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [program, setProgram] = useState<Program>({ ...programData });
@@ -32,35 +37,6 @@ export default function OnlinePrivateTutoringEditPage() {
     const textarea = e.target;
     textarea.style.height = "auto"; // Reset height
     textarea.style.height = `${textarea.scrollHeight}px`; // Adjust height dynamically
-  };
-
-  const handleSessionTypeChange = (
-    index: number,
-    field: "name" | "price",
-    value: string
-  ) => {
-    const updatedSessionTypes = [...program.sessionType];
-    updatedSessionTypes[index][field] = value;
-    setProgram((prev) => ({
-      ...prev,
-      sessionType: updatedSessionTypes,
-    }));
-  };
-
-  const handleAddSessionType = () => {
-    setProgram((prev) => ({
-      ...prev,
-      sessionType: [...prev.sessionType, { name: "", price: "" }],
-    }));
-  };
-
-  const handleRemoveSessionType = (index: number) => {
-    const updatedSessionTypes = [...program.sessionType];
-    updatedSessionTypes.splice(index, 1);
-    setProgram((prev) => ({
-      ...prev,
-      sessionType: updatedSessionTypes,
-    }));
   };
 
   const handleImageUpload = async (): Promise<string> => {
@@ -94,7 +70,7 @@ export default function OnlinePrivateTutoringEditPage() {
     try {
       setLoading(true);
       await axios.put(
-        `https://southlakebackend.onrender.com/api//updateOnlinePrivateTutoring/${program.id}`,
+        `https://southlakebackend.onrender.com/api/editCamp/${program.id}`,
         updatedProgram
       );
       toast.success("Program updated successfully!");
@@ -133,35 +109,96 @@ export default function OnlinePrivateTutoringEditPage() {
         <div className="flex-1">
           {/* Program Name Editable  */}
           <div className="mb-4">
-            <label className="font-semibold text-[#1A3D16]">Program Name</label>
+            <label className="font-semibold text-[#1A3D16]">Camp Name</label>
             <textarea
               className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-              name="programName"
-              value={program.programName}
+              name="campTitle"
+              value={program.campTitle}
               rows={1}
               onChange={handleInputChange}
             />
           </div>
-          {/* Program Price  */}
+
+          {/* Week 1  */}
+          <div className="mb-4">
+            <label className="font-semibold text-[#1A3D16]">Week 1:</label>
+            <textarea
+              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              name="week1"
+              value={program.week1}
+              rows={1}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          {/* Week 2  */}
+          <div className="mb-4">
+            <label className="font-semibold text-[#1A3D16]">Week 2:</label>
+            <textarea
+              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              name="week2"
+              value={program.week2}
+              rows={1}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6">
+        <h3 className="text-lg font-bold text-[#1A3D16] mb-2">More Details</h3>
+        <div className="grid grid-cols-2 gap-6 text-sm">
+          {/* Time  */}
+          <div className="mb-4">
+            <label className="font-semibold text-[#1A3D16]">Time</label>
+            <textarea
+              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              name="time"
+              value={program.time}
+              onChange={handleInputChange}
+            />
+          </div>
+          {/* Cost  */}
+          <div className="mb-4">
+            <label className="font-semibold text-[#1A3D16]">Cost</label>
+            <textarea
+              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              name="cost"
+              value={program.cost}
+              onChange={handleInputChange}
+            />
+          </div>
+          {/* Minimum Enrollment  */}
           <div className="mb-4">
             <label className="font-semibold text-[#1A3D16]">
-              Starting Price
+              Minimun Enrollment
             </label>
             <textarea
               className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-              name="price"
-              value={program.price.toString()}
-              rows={1}
+              name="minimumEnrollment"
+              value={program.minimumEnrollment}
               onChange={handleInputChange}
             />
           </div>
-          {/* Program Description  */}
+          {/* Age Requirement  */}
           <div className="mb-4">
+            <label className="font-semibold text-[#1A3D16]">
+              Age Requirement
+            </label>
+            <textarea
+              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              name="ageRequirement"
+              value={program.ageRequirement}
+              onChange={handleInputChange}
+            />
+          </div>
+          {/* Description  */}
+          <div className="mb-4 col-span-2">
             <label className="font-semibold text-[#1A3D16]">Description</label>
             <textarea
               className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-              name="classExperience"
-              value={program.classExperience}
+              name="description"
+              value={program.description}
               rows={3}
               onChange={handleInputChange}
             />
@@ -169,48 +206,8 @@ export default function OnlinePrivateTutoringEditPage() {
         </div>
       </div>
 
-      {/* Session Type Section */}
-      <div className="mt-6">
-        <h3 className="text-lg font-bold text-[#1A3D16] mb-2">Session Types</h3>
-        <div className="space-y-4">
-          {program.sessionType.map((session, index) => (
-            <div key={index} className="flex items-center space-x-4">
-              <input
-                type="text"
-                placeholder="Session Name"
-                className="w-1/2 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-                value={session.name}
-                onChange={(e) =>
-                  handleSessionTypeChange(index, "name", e.target.value)
-                }
-              />
-              <input
-                type="text"
-                placeholder="Session Price"
-                className="w-1/2 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-                value={session.price}
-                onChange={(e) =>
-                  handleSessionTypeChange(index, "price", e.target.value)
-                }
-              />
-              <button
-                className="px-4 py-2 text-white bg-red-500 rounded-md"
-                onClick={() => handleRemoveSessionType(index)}
-              >
-                Remove
-              </button>
-            </div>
-          ))}
-          <button
-            className="px-4 py-2 text-white bg-blue-500 rounded-md"
-            onClick={handleAddSessionType}
-          >
-            Add Session
-          </button>
-        </div>
-      </div>
-
       <button
+        disabled={isLoading}
         className="px-4 py-2 self-end text-white rounded-md w-fit button-green font-Montserrat bg-[#1A3D16] border-2 border-[#1A3D16] hover:border-[#1A3D16] hover:!text-black font-semibold transition-all duration-300"
         onClick={handleSave}
       >
