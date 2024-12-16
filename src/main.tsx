@@ -35,6 +35,10 @@ import {
   LoginPage,
 } from "./components/index.ts";
 import Testing from "./components/Testing.tsx";
+import OnlinePrivateTutoringEnrolledStudents from "./components/Private/OnlinePrivateTutoringEnrolledStudents.tsx";
+import InPersonPrivateTutoringEnrolledStudents from "./components/InPerson-Tutoring/InPersonPrivateTutoringEnrolledStudents.tsx";
+import MusicClassesEnrolledStudents from "./components/Music-Classes/MusicClassesEnrolledStudents.tsx";
+import SouthlakeCampsEnrolledStudents from "./components/Southlake-Camps/SouthlakeCampsEnrolledStudents.tsx";
 
 const router = createBrowserRouter([
   {
@@ -83,6 +87,10 @@ const router = createBrowserRouter([
         element: <OnlinePrivateTutoringEditPage />,
       },
       {
+        path: "/online-private-tutoring-enrolled-students",
+        element: <OnlinePrivateTutoringEnrolledStudents />,
+      },
+      {
         path: "/person-private-tutoring",
         element: <InPersonPrivateTutoring />,
       },
@@ -90,9 +98,14 @@ const router = createBrowserRouter([
         path: "/person-private-tutoring-edit-page",
         element: <InPersonPrivateTutoringEditPage />,
       },
+
       {
         path: "/person-private-tutoring-lesson-edit-page",
         element: <InPersonPrivateTutoringLessonEditPage />,
+      },
+      {
+        path: "/person-private-tutoring-enrolled-students",
+        element: <InPersonPrivateTutoringEnrolledStudents />,
       },
       {
         path: "/music-classes",
@@ -103,12 +116,20 @@ const router = createBrowserRouter([
         element: <MusicClassesEditPage />,
       },
       {
+        path: "/music-classes-enrolled-students",
+        element: <MusicClassesEnrolledStudents />,
+      },
+      {
         path: "/southlake-camps",
         element: <SouthlakeCamps />,
       },
       {
         path: "/southlake-camp-edit-page",
         element: <SouthlakeCampEditPage />,
+      },
+      {
+        path: "/southlake-camps-enrolled-students",
+        element: <SouthlakeCampsEnrolledStudents />,
       },
       {
         path: "/annual-registration",

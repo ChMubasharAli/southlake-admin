@@ -6,26 +6,23 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx"; // Import xlsx library
 
-interface AfterSchoolProgramForm {
+interface CampForm {
   registrationId: number;
-  expiryDate: string;
   parentFirstName: string;
   parentLastName: string;
-  AfterSchoolProgramForms: Array<Record<string, any>>; // Nested array for additional data
+  CampForms: Array<Record<string, any>>; // Nested array for additional data
 }
 
-const EnrolledStudents: React.FC = () => {
+const SouthlakeCampsEnrolledStudents: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [data, setData] = useState<AfterSchoolProgramForm[]>([]);
-  const [filteredData, setFilteredData] = useState<AfterSchoolProgramForm[]>(
-    []
-  );
+  const [data, setData] = useState<CampForm[]>([]);
+  const [filteredData, setFilteredData] = useState<CampForm[]>([]);
 
   // Fetch Data
   const fetchData = useCallback(async () => {
     try {
       const response = await axios.get(
-        "https://southlakebackend.onrender.com/api/getAfterSchoolParent"
+        "https://southlakebackend.onrender.com/api/getCampParent"
       );
       if (response.data) {
         setData(response.data);
@@ -64,10 +61,9 @@ const EnrolledStudents: React.FC = () => {
   const handleExcelDownload = () => {
     const excelData = filteredData.map((form) => ({
       "Registration ID": form.registrationId || " ",
-      "Expiry Date": form.expiryDate || " ",
       "Parent First Name": form.parentFirstName || " ",
       "Parent Last Name": form.parentLastName || " ",
-      "Program Bought": form.AfterSchoolProgramForms.length || " ",
+      "Program Bought": form.CampForms.length || " ",
     }));
 
     const ws = XLSX.utils.json_to_sheet(excelData);
@@ -89,7 +85,7 @@ const EnrolledStudents: React.FC = () => {
 
     const doc = new jsPDF();
     doc.setFontSize(18);
-    doc.text("After School Program Details", 10, 10);
+    doc.text("Southlake Camps Form Details", 10, 10);
     doc.setFontSize(12);
 
     let yOffset = 20; // Starting vertical position
@@ -145,7 +141,7 @@ const EnrolledStudents: React.FC = () => {
     };
 
     for (const [key, value] of Object.entries(formData)) {
-      if (key === "AfterSchoolProgramForms") {
+      if (key === "CampForms") {
         if (Array.isArray(value)) {
           value.forEach((item: Record<string, any>, index: number) => {
             doc.text(`Program ${index + 1}:`, 10, yOffset);
@@ -176,7 +172,7 @@ const EnrolledStudents: React.FC = () => {
     <div className="p-6 lg:max-w-[80%] mx-auto ">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-[#1A3D16] ">
-          After School Program Enrolled Students
+          Southlake Camps Enrolled Students
         </h2>
         {/* Excel Download Button */}
         <button
@@ -227,7 +223,7 @@ const EnrolledStudents: React.FC = () => {
                   </td>
                   <td className="py-3 px-6 text-left">{form.parentLastName}</td>
                   <td className="py-3 px-6 text-left">
-                    {form.AfterSchoolProgramForms.length}
+                    {form.CampForms.length}
                   </td>
                   <td className="py-3 px-6 text-center flex justify-center">
                     <FaDownload
@@ -253,4 +249,4 @@ const EnrolledStudents: React.FC = () => {
   );
 };
 
-export default EnrolledStudents;
+export default SouthlakeCampsEnrolledStudents;

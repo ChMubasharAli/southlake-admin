@@ -55,7 +55,7 @@ export default function InPersonPrivateTutoring() {
 
   // Navigate to Enrolled Student Page
   const gotoEnrolledStudentPage = () => {
-    navigate("/enrolled-students");
+    navigate("/person-private-tutoring-enrolled-students");
   };
 
   return (

@@ -42,7 +42,7 @@ export default function OnlinePrivateTutoring() {
 
   // Navigate to Enrolled Student Page
   const gotoEnrolledStudentPage = () => {
-    navigate("/enrolled-students");
+    navigate("/online-private-tutoring-enrolled-students");
   };
 
   return (

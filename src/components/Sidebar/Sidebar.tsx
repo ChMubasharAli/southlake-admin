@@ -12,7 +12,7 @@ export default function Sidebar() {
     navigate("/login");
   };
   const menuItems = [
-    // { name: "Dashboard", path: "/dashboard" },
+    { name: "Dashboard", path: "/dashboard" },
     { name: "After School", path: "/after-school" },
     { name: "Enrichment Classes", path: "/programs" },
     { name: "Online Private", path: "/private" },

@@ -50,7 +50,7 @@ export default function SouthlakeCamps() {
 
   // Navigate to Enrolled Student Page
   const gotoEnrolledStudentPage = () => {
-    navigate("/enrolled-students");
+    navigate("/southlake-camps-enrolled-students");
   };
 
   return (

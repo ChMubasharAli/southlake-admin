@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 interface Program {
   id: number;
   programName: string;
-  classExperience: string;
+  description: string;
   price: number;
   image: string;
   sessionType: { name: string; price: string }[]; // Updated structure
@@ -160,8 +160,8 @@ export default function OnlinePrivateTutoringEditPage() {
             <label className="font-semibold text-[#1A3D16]">Description</label>
             <textarea
               className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-              name="classExperience"
-              value={program.classExperience}
+              name="description"
+              value={program.description}
               rows={3}
               onChange={handleInputChange}
             />

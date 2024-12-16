@@ -43,7 +43,7 @@ export default function Programs() {
 
   // Navigate to Enrolled Student Page
   const gotoEnrolledStudentPage = () => {
-    navigate("#");
+    navigate("/single-program-enrolled-students");
   };
 
   return (
@@ -52,7 +52,7 @@ export default function Programs() {
         <h2 className="text-2xl font-bold text-[#1A3D16] uppercase ">
           Enrichment Classes
         </h2>
-        -
+
         <div className="flex gap-8 items-center">
           <button
             onClick={() => setIsFormOpen(true)}

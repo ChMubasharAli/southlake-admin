@@ -3,6 +3,8 @@ import axios from "axios";
 import { jsPDF } from "jspdf";
 import { FaDownload } from "react-icons/fa";
 import autoTable from "jspdf-autotable";
+import * as XLSX from "xlsx"; // Import xlsx library
+import { Loader } from "@mantine/core";
 
 interface ProgramData {
   [key: string]: any;
@@ -117,10 +119,50 @@ const Payment: React.FC = () => {
       student.registrationId.toString().includes(searchQuery)
   );
 
+  // Handle Excel export
+  const handleExportExcel = () => {
+    const dataToExport = filteredData.map((student) => ({
+      "Registration ID": student.registrationId,
+      "Parent Name": `${student.parentFirstName} ${student.parentLastName}`,
+      Amount: `$${student.amount}`,
+      "After School Programs Bought":
+        student.AfterSchoolProgramForms?.length || 0,
+      "Music Programs Bought ": student.MusciProgramForms?.length || 0,
+      "Online Tutoring Programs Bought":
+        student.OnlineTutoringForms?.length || 0,
+      "Private & Test Prep Programs Bought":
+        student.PrivateAndTestPrepForms?.length || 0,
+      "Enrichment Programs Bought": student.SingleProgramForms?.length || 0,
+      "South Camp Programs Bought": student.CampForms?.length || 0,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Payments");
+
+    // Export the data to an Excel file
+    XLSX.writeFile(wb, "payment_data.xlsx");
+  };
+
+  if (data.length <= 0) {
+    return (
+      <div className="h-[100%] flex items-center justify-center">
+        <Loader color="#1A3D16" size="lg" />
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 max-w-full mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-[#1A3D16]">Payments Details</h2>
+        {/* Excel Download Button */}
+        <button
+          onClick={handleExportExcel}
+          className="px-4 py-2 bg-[#1A3D16] text-white rounded-lg"
+        >
+          Download Excel
+        </button>
       </div>
       <div className="max-w-full mx-auto bg-white">
         {/* Search Input */}
@@ -129,7 +171,7 @@ const Payment: React.FC = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by Parent Name or Registration ID"
+            placeholder="Search by Registration ID"
             className="w-full p-3 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -160,7 +202,7 @@ const Payment: React.FC = () => {
                 Private & Test Prep
               </th>
               <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
-                Single Program
+                Enrichment Program
               </th>
               <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
                 Camp Forms

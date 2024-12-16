@@ -4,6 +4,7 @@ import jsPDF from "jspdf";
 import axios from "axios";
 import { Loader } from "@mantine/core";
 import autoTable from "jspdf-autotable";
+import * as XLSX from "xlsx"; // Import xlsx library
 
 interface Student {
   id: number;
@@ -28,6 +29,7 @@ interface Student {
 export default function AnnualRegistration() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Fetch students data from API
   useEffect(() => {
@@ -45,6 +47,11 @@ export default function AnnualRegistration() {
     };
     fetchStudents();
   }, []);
+
+  // Filter students based on search term (registrationId)
+  const filteredStudents = students.filter((student) =>
+    student.registrationId.toString().includes(searchTerm)
+  );
 
   // Handle PDF generation and download
   const handleDownload = (student: Student) => {
@@ -121,6 +128,23 @@ export default function AnnualRegistration() {
     doc.save(`${student.firstName}_${student.lastName}_Details.pdf`);
   };
 
+  // Handle Excel export
+  const handleExportExcel = () => {
+    const dataToExport = filteredStudents.map((student) => ({
+      "Registration ID": student.registrationId,
+      "Parent Name": `${student.parentFirstName} ${student.parentLastName}`,
+      "Child Name": `${student.firstName} ${student.lastName}`,
+      Payment: `$${student.amount}`,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Students");
+
+    // Export the data to an Excel file
+    XLSX.writeFile(wb, "students_data.xlsx");
+  };
+
   if (loading) {
     return (
       <div className="h-[100%] flex items-center justify-center">
@@ -133,8 +157,23 @@ export default function AnnualRegistration() {
     <div className="p-6 lg:max-w-[80%] mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-[#1A3D16]">Enrolled Students</h2>
+        {/* Excel Download Button */}
+        <button
+          onClick={handleExportExcel}
+          className="px-4 py-2 bg-[#1A3D16] text-white rounded-lg"
+        >
+          Download Excel
+        </button>
       </div>
       <div className="bg-white p-8 rounded-lg shadow-lg">
+        {/* Search Input Field */}
+        <input
+          type="text"
+          placeholder="Search by Registration ID"
+          className="w-full mb-4 px-4 py-4 border border-gray-300 rounded-lg"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         <div className="overflow-x-auto shadow-lg">
           <table className="min-w-full bg-white border border-gray-300 shadow-lg">
             <thead>
@@ -157,7 +196,7 @@ export default function AnnualRegistration() {
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
-              {students.map((student) => (
+              {filteredStudents.map((student) => (
                 <tr
                   key={student.id}
                   className="border-b border-gray-300 hover:bg-gray-100"
