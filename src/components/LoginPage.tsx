@@ -64,12 +64,12 @@ const LoginPage = () => {
               label="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="your email"
+              placeholder="Your Email"
             />
           </div>
           <div className="mb-6">
             <PasswordInput
-              label="Input label"
+              label="Password"
               withAsterisk
               placeholder="Password"
               value={password}
