@@ -21,7 +21,7 @@ export default function Sidebar() {
     { name: "Southlake Camps", path: "/southlake-camps" },
     { name: "Annual Registration", path: "/annual-registration" },
     { name: "Users", path: "/users" },
-    { name: "Payment", path: "/payment" },
+    { name: "Transections", path: "/payment" },
   ];
   return (
     <div className=" bg-white border-r-2 border-r-black min-h-screen sticky top-0 left-0 font-Montserrat  px-4">
