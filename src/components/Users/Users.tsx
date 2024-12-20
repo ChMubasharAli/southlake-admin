@@ -47,7 +47,12 @@ const Users: React.FC = () => {
   }, [fetchData]);
 
   // Utility function to handle empty fields
-  const getFieldValue = (value: string | undefined) => (value ? value : "N/A");
+  const getFieldValue = (value: string | undefined | object) => {
+    if (typeof value === "object") {
+      return JSON.stringify(value); // This will print the object as a string, or you can customize this behavior
+    }
+    return value || "N/A";
+  };
 
   // This format key fucntion will use for the Modal that will shwo after clicking the detail button in the table and that modal will show user data
   const formatKey = (key: string) => {
@@ -227,9 +232,7 @@ const Users: React.FC = () => {
               <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
                 First Child Name
               </th>
-              <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
-                Second Child Name
-              </th>
+
               <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
                 Amount
               </th>
@@ -274,19 +277,7 @@ const Users: React.FC = () => {
                   </td>
 
                   <td className="py-3 px-6 text-left">
-                    {program.child2FirstName
-                      ? program.child2FirstName + " " + program.child2LastName
-                      : program.firstStudentFirstName
-                      ? program.firstStudentFirstName +
-                        " " +
-                        program.firstStudentLastName
-                      : program.camperFirstName
-                      ? program.camperFirstName + " " + program.camperLastName
-                      : ""}
-                  </td>
-
-                  <td className="py-3 px-6 text-left">
-                    ${program.amount || 0}
+                    ${program.amountPaidByUser || 0}
                   </td>
                   <td className="py-3 px-6 text-center">
                     <span
@@ -312,10 +303,10 @@ const Users: React.FC = () => {
         radius={"md"}
         scrollAreaComponent={ScrollArea.Autosize}
       >
-        <div>
+        <div className="w-full">
           {selectedStudent && (
             <>
-              <table className=" bg-white border border-gray-300  shadow-lg">
+              <table className=" w-full border border-gray-300  shadow-lg">
                 <thead>
                   <tr className="bg-gray-200 text-gray-700 uppercase  text-sm leading-normal">
                     <th className="py-3 px-6 text-left text-[#1A3D16]">

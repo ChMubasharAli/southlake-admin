@@ -140,11 +140,11 @@ const router = createBrowserRouter([
 
       {
         path: "/users",
-        element: <Users />,
+        element: <Payment />,
       },
       {
         path: "/payment",
-        element: <Payment />,
+        element: <Users />,
       },
       {
         path: "/contact",
