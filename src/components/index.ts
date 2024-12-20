@@ -18,10 +18,11 @@ import SouthlakeCampEditPage from "./Southlake-Camps/SouthlakeCampEditPage";
 import AnnualRegistration from "./Annual-Registration/AnnualRegistration";
 import Users from "./Users/Users";
 import Payment from "./Payment/Payment";
+import ContactUs from "./ContactUs";
 
 import ProtectedRoute from "./ProtectedRoutes";
 import LoginPage from "./LoginPage";
 
 
 
-export {Sidebar,Dashboard, AfterSchool,AfterSchoolEditPage,EnrolledStudents, Programs,SingleProgramEditPage,SingleProgramEnrolledStudents, OnlinePrivateTutoring,OnlinePrivateTutoringEditPage,InPersonPrivateTutoring,InPersonPrivateTutoringEditPage,InPersonPrivateTutoringLessonEditPage,  MusicClasses,MusicClassesEditPage, SouthlakeCamps,SouthlakeCampEditPage, AnnualRegistration, Users, Payment, ProtectedRoute, LoginPage};
+export {Sidebar,Dashboard, AfterSchool,AfterSchoolEditPage,EnrolledStudents, Programs,SingleProgramEditPage,SingleProgramEnrolledStudents, OnlinePrivateTutoring,OnlinePrivateTutoringEditPage,InPersonPrivateTutoring,InPersonPrivateTutoringEditPage,InPersonPrivateTutoringLessonEditPage,  MusicClasses,MusicClassesEditPage, SouthlakeCamps,SouthlakeCampEditPage, AnnualRegistration, Users, Payment,ContactUs, ProtectedRoute, LoginPage};

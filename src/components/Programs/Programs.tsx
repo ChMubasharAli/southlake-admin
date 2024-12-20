@@ -73,7 +73,7 @@ export default function Programs() {
 
   return (
     <div className="p-12 font-Montserrat">
-      <div className="flex items-center justify-between mb-6">
+      <div className=" bg-white sticky top-0  flex items-center justify-between py-6 mb-6">
         <h2 className="text-2xl font-bold text-[#1A3D16] uppercase ">
           Enrichment Classes
         </h2>

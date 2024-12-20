@@ -33,12 +33,14 @@ import {
   SouthlakeCampEditPage,
   Users,
   LoginPage,
+  ContactUs,
 } from "./components/index.ts";
 import Testing from "./components/Testing.tsx";
 import OnlinePrivateTutoringEnrolledStudents from "./components/Private/OnlinePrivateTutoringEnrolledStudents.tsx";
 import InPersonPrivateTutoringEnrolledStudents from "./components/InPerson-Tutoring/InPersonPrivateTutoringEnrolledStudents.tsx";
 import MusicClassesEnrolledStudents from "./components/Music-Classes/MusicClassesEnrolledStudents.tsx";
 import SouthlakeCampsEnrolledStudents from "./components/Southlake-Camps/SouthlakeCampsEnrolledStudents.tsx";
+import Schedule from "./Schedule.tsx";
 
 const router = createBrowserRouter([
   {
@@ -143,6 +145,14 @@ const router = createBrowserRouter([
       {
         path: "/payment",
         element: <Payment />,
+      },
+      {
+        path: "/contact",
+        element: <ContactUs />,
+      },
+      {
+        path: "/schedule",
+        element: <Schedule />,
       },
       {
         path: "/testing",

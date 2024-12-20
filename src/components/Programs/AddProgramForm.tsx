@@ -143,6 +143,7 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
       console.log("Program created successfully:", response.data);
       toast.success("Program added successfully!");
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error("Error submitting form data:", error);
       toast.error("Failed to add program. Please try again later.");
@@ -388,7 +389,7 @@ const AddProgramForm: React.FC<AddProgramFormProps> = ({ isOpen, onClose }) => {
           </div>
           <div>
             <label htmlFor="classExperience" className="text-xs">
-              Clear Experience
+              Class Experience
             </label>
             <input
               type="text"

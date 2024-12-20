@@ -22,6 +22,8 @@ export default function Sidebar() {
     { name: "Annual Registration", path: "/annual-registration" },
     { name: "Users", path: "/users" },
     { name: "Transections", path: "/payment" },
+    { name: "Contact Us", path: "/contact" },
+    { name: "Schedule", path: "/schedule" },
   ];
   return (
     <div className=" bg-white border-r-2 border-r-black min-h-screen sticky top-0 left-0 font-Montserrat  px-4">
