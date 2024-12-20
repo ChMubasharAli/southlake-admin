@@ -155,9 +155,7 @@ const Payment: React.FC = () => {
   return (
     <div className="p-6 max-w-full mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#1A3D16]">
-          Transection Details
-        </h2>
+        <h2 className="text-2xl font-bold text-[#1A3D16]">All Users Details</h2>
         {/* Excel Download Button */}
         <button
           onClick={handleExportExcel}
@@ -187,9 +185,6 @@ const Payment: React.FC = () => {
               </th>
               <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
                 Parent Name
-              </th>
-              <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
-                Amount
               </th>
               <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
                 After School Program
@@ -223,7 +218,6 @@ const Payment: React.FC = () => {
                 <td className="py-3 px-6 text-left">
                   {student.parentFirstName} {student.parentLastName}
                 </td>
-                <td className="py-3 px-6 text-left">${student.amount}</td>
                 <td className="py-3 px-6 text-center">
                   {(student.AfterSchoolProgramForms?.length || 0) > 0 && (
                     <FaDownload

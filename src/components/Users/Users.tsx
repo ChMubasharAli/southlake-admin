@@ -201,7 +201,9 @@ const Users: React.FC = () => {
   return (
     <div className="p-6 max-w-full mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#1A3D16]">All Users Details</h2>
+        <h2 className="text-2xl font-bold text-[#1A3D16]">
+          All Transactions Details
+        </h2>
         <button
           onClick={handleExportExcel}
           className="px-4 py-2 bg-[#1A3D16] text-white rounded-lg"
