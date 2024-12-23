@@ -7,6 +7,8 @@ interface Program {
   id: number;
   programName: string;
   description: string;
+  slotsAvailable: string;
+  slotsComplete: string;
   price: number;
   image: string;
   sessionType: { name: string; price: string }[]; // Updated structure
@@ -155,14 +157,29 @@ export default function OnlinePrivateTutoringEditPage() {
               onChange={handleInputChange}
             />
           </div>
-          {/* Program Description  */}
+          {/* Slots Available  */}
           <div className="mb-4">
-            <label className="font-semibold text-[#1A3D16]">Description</label>
+            <label className="font-semibold text-[#1A3D16]">
+              Slots Available
+            </label>
             <textarea
               className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
-              name="description"
-              value={program.description}
-              rows={3}
+              name="slotsAvailable"
+              value={program.slotsAvailable.toString()}
+              rows={1}
+              onChange={handleInputChange}
+            />
+          </div>
+          {/* Program Price  */}
+          <div className="mb-4">
+            <label className="font-semibold text-[#1A3D16]">
+              Slots Completed
+            </label>
+            <textarea
+              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              name="slotsComplete"
+              value={program.slotsComplete.toString()}
+              rows={1}
               onChange={handleInputChange}
             />
           </div>
@@ -171,6 +188,17 @@ export default function OnlinePrivateTutoringEditPage() {
 
       {/* Session Type Section */}
       <div className="mt-6">
+        {/* Program Description  */}
+        <div className="mb-4">
+          <label className="font-semibold text-[#1A3D16]">Description</label>
+          <textarea
+            className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+            name="description"
+            value={program.description}
+            rows={3}
+            onChange={handleInputChange}
+          />
+        </div>
         <h3 className="text-lg font-bold text-[#1A3D16] mb-2">Session Types</h3>
         <div className="space-y-4">
           {program.sessionType.map((session, index) => (

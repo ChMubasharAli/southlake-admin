@@ -15,6 +15,7 @@ interface Program {
   description: string;
   image: string;
   slotsAvailable: string;
+  slotsComplete: string;
   amount: number;
   lessonLength: { name: string; price: string }[]; // Updated structure
   createdAt?: Date;
@@ -169,6 +170,18 @@ export default function MusicClassesEditPage() {
               className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
               name="slotsAvailable"
               value={program.slotsAvailable}
+              rows={1}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="font-semibold text-[#1A3D16]">
+              Slots Completed
+            </label>
+            <textarea
+              className="w-full p-2 mt-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              name="slotsComplete"
+              value={program.slotsComplete}
               rows={1}
               onChange={handleInputChange}
             />

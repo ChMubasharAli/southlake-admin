@@ -18,6 +18,7 @@ interface Program {
   cancellationPolicy: string;
   image: string;
   slotsAvailable: string;
+  slotsComplete: string;
   price: number;
   dateFrom: string;
   dateTo: string;
@@ -142,6 +143,17 @@ export default function SingleProgramEditPage() {
               className="w-full  mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
               name="slotsAvailable"
               value={program.slotsAvailable}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="font-semibold text-[#1A3D16]">
+              Slots Completed
+            </label>
+            <Input
+              className="w-full  mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A3D16]"
+              name="slotsComplete"
+              value={program.slotsComplete}
               onChange={handleInputChange}
             />
           </div>

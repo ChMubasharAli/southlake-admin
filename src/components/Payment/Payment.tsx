@@ -5,6 +5,8 @@ import { FaDownload } from "react-icons/fa";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx"; // Import xlsx library
 import { Loader } from "@mantine/core";
+import AddNewUserForm from "./AddNewUserForm";
+import { toast } from "react-toastify";
 
 interface ProgramData {
   [key: string]: any;
@@ -21,11 +23,13 @@ interface StudentData {
   PrivateAndTestPrepForms: ProgramData[];
   SingleProgramForms: ProgramData[];
   CampForms: ProgramData[];
+  isDeleting?: boolean;
 }
 
 const Payment: React.FC = () => {
   const [data, setData] = useState<StudentData[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -41,6 +45,43 @@ const Payment: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // This function will dellete the specific user
+  const handleDelete = async (registrationId: number) => {
+    try {
+      // Change the delete button to "Deleting..." and disable it
+      setData((prevData) =>
+        prevData.map((student) =>
+          student.registrationId === registrationId
+            ? { ...student, isDeleting: true }
+            : student
+        )
+      );
+
+      // Send delete request
+      await axios.delete(
+        `https://southlakebackend.onrender.com/api/deleteRegistration/${registrationId}`
+      );
+
+      toast.info("Success");
+
+      // Remove the deleted student from the state
+      setData((prevData) =>
+        prevData.filter((student) => student.registrationId !== registrationId)
+      );
+    } catch (error) {
+      // If the request fails, revert the button text to "Delete" and re-enable it
+      toast.error("Please Try Again ");
+      setData((prevData) =>
+        prevData.map((student) =>
+          student.registrationId === registrationId
+            ? { ...student, isDeleting: false } // Reset isDeleting to false
+            : student
+        )
+      );
+      console.error("Error deleting student:", error);
+    }
+  };
 
   const handleDownload = (
     registrationId: number,
@@ -153,18 +194,27 @@ const Payment: React.FC = () => {
   }
 
   return (
-    <div className="p-6 max-w-full mx-auto">
+    <div className="p-6 max-w-full  mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-[#1A3D16]">All Users Details</h2>
-        {/* Excel Download Button */}
-        <button
-          onClick={handleExportExcel}
-          className="px-4 py-2 bg-[#1A3D16] text-white rounded-lg"
-        >
-          Download Excel
-        </button>
+        <div className="flex items-center gap-4">
+          {/* Add New User Button */}
+          <button
+            onClick={() => setIsFormOpen(true)}
+            className="px-4 py-2 bg-[#1A3D16] text-white rounded-lg"
+          >
+            Add New User
+          </button>
+          {/* Excel Download Button */}
+          <button
+            onClick={handleExportExcel}
+            className="px-4 py-2 bg-[#1A3D16] text-white rounded-lg"
+          >
+            Download Excel
+          </button>
+        </div>
       </div>
-      <div className="max-w-full mx-auto bg-white">
+      <div className="max-w-full mx-auto overflow-x-scroll">
         {/* Search Input */}
         <div className="rounded-lg shadow-lg">
           <input
@@ -203,6 +253,9 @@ const Payment: React.FC = () => {
               </th>
               <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
                 Camp Forms
+              </th>
+              <th className="py-3 px-6 text-left text-[#1A3D16] uppercase">
+                Actions
               </th>
             </tr>
           </thead>
@@ -314,11 +367,29 @@ const Payment: React.FC = () => {
                     />
                   )}
                 </td>
+                <td className="py-3 px-6 text-center">
+                  <button
+                    onClick={() => handleDelete(student.registrationId)}
+                    disabled={student.isDeleting}
+                    className={`px-4 py-2 rounded-lg text-white ${
+                      student.isDeleting
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-red-600 hover:bg-red-700"
+                    }`}
+                  >
+                    {student.isDeleting ? "Deleting..." : "Delete"}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      <AddNewUserForm
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+      />
     </div>
   );
 };
